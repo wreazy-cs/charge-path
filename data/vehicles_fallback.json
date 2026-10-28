@@ -1,0 +1,50 @@
+[
+  {
+    "id": "togg-t10x-lr",
+    "brand": "Togg",
+    "model": "T10X Long Range RWD",
+    "type": "SUV",
+    "batteryKwh": 85.0,
+    "consumptionWhPerKm": 195,
+    "massKg": 2248,
+    "maxDcKw": 180,
+    "maxAcKw": 11,
+    "notes": "ev-database.org: kullanılabilir batarya 85.0 kWh, gerçek tüketim 195 Wh/km (ılık 172, soğuk 230), boş ağırlık 2248 kg"
+  },
+  {
+    "id": "togg-t10f-lr",
+    "brand": "Togg",
+    "model": "T10F Long Range RWD",
+    "type": "SEDAN",
+    "batteryKwh": 85.0,
+    "consumptionWhPerKm": 173,
+    "massKg": 2079,
+    "maxDcKw": 180,
+    "maxAcKw": 11,
+    "notes": "ev-database.org: tüketim 173 Wh/km; evkx.net: 85.0 kWh, 2079 kg (ağırlık etiketsiz tablodan), AC gücü T10X ile aynı varsayıldı"
+  },
+  {
+    "id": "tesla-model-y-rwd",
+    "brand": "Tesla",
+    "model": "Model Y RWD",
+    "type": "SUV",
+    "batteryKwh": 60.0,
+    "consumptionWhPerKm": 158,
+    "massKg": 1981,
+    "maxDcKw": 175,
+    "maxAcKw": 11,
+    "notes": "ev-database.org: 60.0 kWh, 158 Wh/km (ılık 138, soğuk 191), 1981 kg"
+  },
+  {
+    "id": "tesla-model-3-rwd",
+    "brand": "Tesla",
+    "model": "Model 3 RWD",
+    "type": "SEDAN",
+    "batteryKwh": 60.0,
+    "consumptionWhPerKm": 133,
+    "massKg": 1836,
+    "maxDcKw": 175,
+    "maxAcKw": 11,
+    "notes": "ev-database.org: 60.0 kWh, 133 Wh/km (ılık 115, soğuk 167), 1836 kg"
+  }
+]
