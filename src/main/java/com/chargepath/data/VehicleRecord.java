@@ -1,15 +1,15 @@
 package com.chargepath.data;
 
 /**
- * JSON dosyasındaki bir araç satırının birebir karşılığı (DTO: veri taşıma nesnesi).
- * Gson, JSON'daki alan adlarını bu sınıftaki alan adlarıyla eşleştirir.
- * İş kuralı içermez, sadece veriyi taşır. Gerçek nesneye VehicleFactory çevirir.
+ * vehicles_fallback.json dosyasındaki bir araç kaydının Java karşılığı.
+ * DTO (Data Transfer Object): iş kuralı içermez, yalnızca veri taşır.
+ * Gson bu sınıfı doldurur, VehicleFactory araç nesnesine dönüştürür.
  */
 public class VehicleRecord {
     public String id;
     public String brand;
     public String model;
-    public String type;
+    public String type;        // "SEDAN" ya da "SUV"
     public double batteryKwh;
     public double consumptionWhPerKm;
     public double massKg;

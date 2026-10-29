@@ -4,7 +4,10 @@ import com.chargepath.model.ElectricVehicle;
 import com.chargepath.model.Location;
 import com.chargepath.model.TripConditions;
 
-/** Kullanıcının rota isteği: hangi araçla, nereden, nereye, kaç yüzde bataryayla, hangi koşullarda. */
+/**
+ * Kullanıcının rota isteğini tutar: araç, başlangıç, varış,
+ * başlangıç batarya yüzdesi ve yolculuk koşulları.
+ */
 public final class TripRequest {
 
     private final ElectricVehicle vehicle;
@@ -15,6 +18,7 @@ public final class TripRequest {
 
     public TripRequest(ElectricVehicle vehicle, Location from, Location to,
                        double startSocPercent, TripConditions conditions) {
+        // Eksik ya da geçersiz istekler planlayıcıya iletilmez
         if (vehicle == null || from == null || to == null || conditions == null) {
             throw new IllegalArgumentException("Araç, başlangıç, varış ve koşullar boş olamaz");
         }
@@ -47,6 +51,7 @@ public final class TripRequest {
         return startSocPercent;
     }
 
+    // Yüzdeyi kWh'e çevirir. Örnek: 85 kWh bataryanın %40'ı = 34 kWh
     public double getStartSocKwh() {
         return vehicle.getBatteryKwh() * startSocPercent / 100.0;
     }

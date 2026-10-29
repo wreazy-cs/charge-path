@@ -6,7 +6,7 @@ import com.chargepath.model.DcFastStation;
 import com.chargepath.model.Location;
 
 /**
- * Fabrika (Factory) kalıbı: JSON kaydından doğru istasyon alt sınıfını üretir.
+ * Factory kalıbı: JSON kaydındaki tipe göre uygun istasyon sınıfını üretir.
  *   type = "AC" -> AcStation,  type = "DC" -> DcFastStation
  */
 public final class StationFactory {

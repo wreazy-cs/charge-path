@@ -23,11 +23,12 @@ import java.util.Locale;
 import java.util.Optional;
 
 /**
- * Konsol menüsü: kullanıcıyla konuşan katman.
- * Hesap yapmaz; isteği toplar, planlayıcıya verir, sonucu RoutePrinter'a yazdırır.
+ * Kullanıcıyla etkileşimi yöneten konsol menüsü.
+ * Hesaplama yapmaz; girdileri toplar, planlayıcıya iletir ve sonucu RoutePrinter ile gösterir.
  */
 public class ConsoleMenu {
 
+    // Sayıların Türkçe biçimde yazılması için (ondalık ayracı virgül: 12,5)
     private static final Locale TR = Locale.forLanguageTag("tr-TR");
 
     private final VehicleRepository vehicles;
@@ -54,6 +55,7 @@ public class ConsoleMenu {
         this.out = out;
     }
 
+    // Ana döngü: kullanıcı 0 seçene kadar menü tekrar gösterilir
     public void run() {
         printBanner();
         while (true) {
@@ -75,14 +77,16 @@ public class ConsoleMenu {
                     default -> out.println("Geçersiz seçim.");
                 }
             } catch (IllegalArgumentException e) {
+                // Geçersiz istekte (örneğin aynı başlangıç ve varış) hata gösterilir, menüye dönülür
                 out.println("\nHATA: " + e.getMessage());
             }
             input.waitForEnter();
         }
     }
 
-    /** Video ve sunum için hazır senaryo: kışın, yarım bataryayla Edirne'den İstanbul'a. */
+    // Hazır demo senaryosu: kış koşullarında, %40 bataryayla Edirne'den İstanbul'a
     public void runDemo() {
+        // Togg bulunamazsa listedeki ilk araç kullanılır
         ElectricVehicle togg = vehicles.findById("togg-t10x-lr").orElse(vehicles.findAll().get(0));
         Location from = findCity("Edirne");
         Location to = findCity("İstanbul (Fatih)");
@@ -95,6 +99,7 @@ public class ConsoleMenu {
         out.printf(TR, " Edirne -> İstanbul karayolu tahmini: %.0f km. Şarj olmadan yetmez.%n",
                 planner.roadKm(from, to));
 
+        // Aynı istek iki farklı stratejiyle planlanır (Strategy kalıbı)
         Optional<Route> cheapest = planner.plan(request, new CheapestStrategy());
         Optional<Route> fastest = planner.plan(request, new FastestStrategy());
         if (cheapest.isEmpty() || fastest.isEmpty()) {
@@ -108,6 +113,7 @@ public class ConsoleMenu {
         saveToHistory(fastest.get());
     }
 
+    // Açılış başlığı. Çok satırlı metin için text block (""") kullanılır.
     private void printBanner() {
         out.println("""
 
@@ -158,6 +164,7 @@ public class ConsoleMenu {
         out.println("\n Not: Konumlar simülasyon için işaretlenmiştir, gerçek istasyonların varlığı garanti edilmez.");
     }
 
+    // Seçilen koşullardaki menzili ideal koşullardaki menzille karşılaştırır
     private void calculateRange() {
         ElectricVehicle vehicle = chooseVehicle();
         double soc = input.readDouble("Batarya yüzdesi (1-100): ", 1, 100);
@@ -173,6 +180,7 @@ public class ConsoleMenu {
     private void planRoute() {
         TripRequest request = readTripRequest();
         out.println("\n Strateji: 1) En ucuz   2) En hızlı");
+        // Seçime göre strateji nesnesi oluşturulur; planlayıcı değişmez
         RouteStrategy strategy = input.readInt("Seçiminiz: ", 1, 2) == 1 ? new CheapestStrategy() : new FastestStrategy();
         Optional<Route> route = planner.plan(request, strategy);
         if (route.isEmpty()) {
@@ -198,6 +206,7 @@ public class ConsoleMenu {
         }
     }
 
+    // Rota için gerekli bilgiler kullanıcıdan sırayla alınır
     private TripRequest readTripRequest() {
         ElectricVehicle vehicle = chooseVehicle();
         out.println("\n Başlangıç şehri:");
@@ -222,6 +231,7 @@ public class ConsoleMenu {
         for (int i = 0; i < list.size(); i++) {
             out.printf(" %d) %s%n", i + 1, list.get(i));
         }
+        // Menü 1'den, liste indeksi 0'dan başladığı için 1 çıkarılır
         return list.get(input.readInt("Araç seçin: ", 1, list.size()) - 1);
     }
 
@@ -240,6 +250,7 @@ public class ConsoleMenu {
         throw new IllegalArgumentException("Şehir bulunamadı: " + name);
     }
 
+    // Rota özet kayda çevrilir ve trip_history.json dosyasına eklenir
     private void saveToHistory(Route route) {
         history.save(TripRecord.from(route));
         out.println(" (Yolculuk geçmişe kaydedildi.)");
@@ -250,6 +261,7 @@ public class ConsoleMenu {
         out.println(" İpucu: batarya yüzdesini artırın, hızı düşürün ya da klimayı kapatın.");
     }
 
+    // Uzun adlar tablo düzenini bozmaması için kısaltılır
     private static String shorten(String text, int max) {
         return text.length() <= max ? text : text.substring(0, max - 1) + ".";
     }

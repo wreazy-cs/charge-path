@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** Şehirleri JSON dosyasından okuyan depo. */
+// Şehirleri cities.json dosyasından okuyan depo
 public class JsonCityRepository implements CityRepository {
 
     private final List<Location> cities = new ArrayList<>();
 
+    // Dosya kurucuda bir kez okunur, her kayıt Location nesnesine çevrilir
     public JsonCityRepository(Path file) {
         for (CityRecord r : JsonFiles.readList(file, CityRecord[].class)) {
             cities.add(new Location(r.name, r.lat, r.lon, r.elevationM));

@@ -1,27 +1,31 @@
 package com.chargepath.model;
 
 /**
- * Tüm elektrikli araçların ortak şablonu (soyut sınıf).
+ * Tüm elektrikli araçlar için ortak soyut üst sınıf.
  *
- * abstract: Bu sınıftan doğrudan nesne üretilemez ("new ElectricVehicle" yok).
- * Sadece Sedan ve Suv gibi alt sınıflar üzerinden nesne üretilir.
+ * abstract olduğu için doğrudan nesnesi oluşturulamaz; nesneler Sedan ve Suv
+ * alt sınıflarından üretilir.
  *
- * Kapsülleme: batarya seviyesi (socKwh) private. Dışarıdan sadece
- * consume() ve charge() kapılarıyla değişir, o kapılar da kuralları korur:
- * seviye asla 0'ın altına ya da kapasitenin üstüne çıkmaz.
+ * Kapsülleme: batarya seviyesi (socKwh) private tanımlıdır ve yalnızca consume()
+ * ile charge() üzerinden değişir. Bu metotlar seviyenin 0'ın altına düşmesini
+ * ve kapasiteyi aşmasını engeller.
  */
 public abstract class ElectricVehicle {
 
+    // Araç oluşturulduktan sonra değişmeyen bilgiler
     private final String id;
     private final String brand;
     private final String model;
     private final double batteryKwh;          // kullanılabilir batarya kapasitesi
     private final double consumptionWhPerKm;  // ortalama tüketim (Wh/km)
     private final double massKg;              // boş ağırlık
-    private final double maxDcKw;             // DC hızlı şarjda kabul edebildiği en yüksek güç
-    private final double maxAcKw;             // AC şarjda kabul edebildiği en yüksek güç
+    private final double maxDcKw;             // DC şarjda kabul edilen en yüksek güç
+    private final double maxAcKw;             // AC şarjda kabul edilen en yüksek güç
+
+    // Yolculuk sırasında değiştiği için final değildir
     private double socKwh;                    // anlık batarya seviyesi (State of Charge)
 
+    // protected: yalnızca alt sınıflar super(...) ile çağırabilir
     protected ElectricVehicle(String id, String brand, String model, double batteryKwh,
                               double consumptionWhPerKm, double massKg, double maxDcKw, double maxAcKw) {
         if (id == null || id.isBlank()) throw new IllegalArgumentException("Araç kimliği boş olamaz");
@@ -37,32 +41,29 @@ public abstract class ElectricVehicle {
         this.massKg = massKg;
         this.maxDcKw = maxDcKw;
         this.maxAcKw = maxAcKw;
-        this.socKwh = batteryKwh; // yeni araç dolu başlar
+        this.socKwh = batteryKwh; // yeni araç tam dolu başlar
     }
 
-    /**
-     * Hava direnci katsayısı (çok biçimlilik): her alt sınıf kendi değerini verir.
-     * Sedan alçak ve aerodinamik, SUV daha yüksek ve geniş.
-     */
+    // Çok biçimlilik: hava direnci katsayısını her alt sınıf kendisi belirler
     public abstract double getDragFactor();
 
-    /** Araç tipinin okunabilir adı ("Sedan", "SUV"). */
+    // Araç tipinin adı ("Sedan" ya da "SUV")
     public abstract String getTypeName();
 
-    /** Bataryadan enerji harcar. Yetmezse hata verir, seviye eksiye düşmez. */
+    // Bataryadan enerji harcar. Enerji yetersizse hata verir, seviye değişmez.
     public void consume(double kwh) {
         if (kwh < 0) throw new IllegalArgumentException("Tüketim negatif olamaz");
         if (kwh > socKwh) throw new IllegalStateException("Yetersiz batarya: " + socKwh + " kWh var, " + kwh + " kWh istendi");
         socKwh -= kwh;
     }
 
-    /** Bataryayı şarj eder. Kapasiteyi aşan kısım bataryaya girmez. */
+    // Bataryayı şarj eder. Kapasiteyi aşan kısım eklenmez.
     public void charge(double kwh) {
         if (kwh < 0) throw new IllegalArgumentException("Şarj miktarı negatif olamaz");
         socKwh = Math.min(batteryKwh, socKwh + kwh);
     }
 
-    /** Batarya seviyesini yüzde olarak ayarlar (senaryo başlangıcı için). */
+    // Senaryo başlangıcı için batarya seviyesini yüzde olarak ayarlar
     public void setSocPercent(double percent) {
         if (percent < 0 || percent > 100) throw new IllegalArgumentException("Yüzde 0 ile 100 arasında olmalı");
         socKwh = batteryKwh * percent / 100.0;
@@ -88,6 +89,7 @@ public abstract class ElectricVehicle {
         return model;
     }
 
+    // Marka ve model birlikte döner, örneğin "Togg T10X"
     public String getDisplayName() {
         return brand + " " + model;
     }

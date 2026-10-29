@@ -1,9 +1,9 @@
 package com.chargepath.model;
 
 /**
- * AC (alternatif akım) istasyonu: yavaş ama genelde ucuz.
- * Akımı aracın içindeki şarj cihazı (on-board charger) dönüştürür,
- * bu yüzden hız, istasyon ile aracın AC sınırının küçüğüdür.
+ * AC (alternatif akım) şarj istasyonu: yavaş, genellikle daha ucuzdur.
+ * Akım, aracın dahili şarj cihazı tarafından dönüştürülür. Bu nedenle şarj gücü,
+ * istasyon gücü ile aracın AC sınırından küçük olanıdır.
  */
 public class AcStation extends ChargingStation {
 
@@ -12,6 +12,7 @@ public class AcStation extends ChargingStation {
         super(id, name, operator, city, location, powerKw, pricePerKwh);
     }
 
+    // Örnek: istasyon 22 kW, araç 11 kW kabul ediyorsa şarj gücü 11 kW olur
     @Override
     public double effectivePowerKw(ElectricVehicle vehicle) {
         return Math.min(getPowerKw(), vehicle.getMaxAcKw());

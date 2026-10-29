@@ -8,11 +8,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/** Araçları JSON dosyasından okuyan depo. Dosya bir kez okunur, sonra bellekte tutulur. */
+// Araçları vehicles_fallback.json dosyasından okuyan depo. Dosya bir kez okunur ve bellekte tutulur.
 public class JsonVehicleRepository implements VehicleRepository {
 
     private final List<ElectricVehicle> vehicles = new ArrayList<>();
 
+    // Her kayıt VehicleFactory ile Sedan ya da Suv nesnesine dönüştürülür
     public JsonVehicleRepository(Path file) {
         for (VehicleRecord record : JsonFiles.readList(file, VehicleRecord[].class)) {
             vehicles.add(VehicleFactory.create(record));

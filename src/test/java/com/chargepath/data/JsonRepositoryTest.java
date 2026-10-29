@@ -13,8 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Dosya okuma/yazma testleri: veri dosyaları ve yolculuk geçmişi
 class JsonRepositoryTest {
 
+    // Veri dosyasındaki 28 istasyon okunmalı, 17'si DC olmalıdır
     @Test
     void fallbackStationFileLoadsAllStations() {
         StationRepository repo = new JsonStationRepository(Path.of("data/stations_fallback.json"));
@@ -25,6 +27,7 @@ class JsonRepositoryTest {
         assertInstanceOf(DcFastStation.class, repo.findById("EDR-01").orElseThrow());
     }
 
+    // Veri dosyasındaki 4 araç okunmalıdır
     @Test
     void fallbackVehicleFileLoadsFourVehicles() {
         VehicleRepository repo = new JsonVehicleRepository(Path.of("data/vehicles_fallback.json"));
@@ -32,11 +35,13 @@ class JsonRepositoryTest {
         assertTrue(repo.findById("togg-t10x-lr").isPresent());
     }
 
+    // Dosya yoksa anlaşılır bir hata (DataAccessException) verilmelidir
     @Test
     void missingFileGivesClearError() {
         assertThrows(DataAccessException.class, () -> new JsonStationRepository(Path.of("yok/olmayan.json")));
     }
 
+    // Kaydedilen yolculuk yeni bir depo nesnesiyle okunabilmelidir (kalıcılık)
     @Test
     void tripHistoryIsPersistedBetweenRepositoryInstances(@TempDir Path tempDir) {
         Path file = tempDir.resolve("trip_history.json");
@@ -44,7 +49,7 @@ class JsonRepositoryTest {
                 "En ucuz", 72.5, 15.1, 0, 0.8, 0, List.of());
 
         new JsonTripHistoryRepository(file).save(record);
-        // Yeni bir depo nesnesi = programın kapanıp yeniden açılması gibi
+        // Yeni depo nesnesi, programın yeniden açılmasını temsil eder
         List<TripRecord> loaded = new JsonTripHistoryRepository(file).findAll();
 
         assertEquals(1, loaded.size());

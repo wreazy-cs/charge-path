@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * İstasyon verisine erişim sözleşmesi (Repository kalıbı).
- * Arayüz küçük tutuldu (Arayüz Ayrımı İlkesi, ISP): planlayıcının ihtiyacı sadece bunlar.
+ * İstasyon verilerine erişim arayüzü (Repository kalıbı).
+ * Planlayıcının ihtiyacı olan iki metotla sınırlıdır (Arayüz Ayrımı ilkesi, ISP).
  */
 public interface StationRepository {
 
     List<ChargingStation> findAll();
 
+    // Kayıt bulunamazsa boş Optional döner
     Optional<ChargingStation> findById(String id);
 }

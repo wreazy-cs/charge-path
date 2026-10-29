@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Ekrana yazdırma işinin tamamı burada (Tek Sorumluluk İlkesi).
- * Planlayıcı hesaplar, bu sınıf sadece gösterir.
+ * Tüm ekran çıktıları bu sınıfta toplanır (Tek Sorumluluk ilkesi, SRP).
+ * Planlayıcı hesaplar, bu sınıf yalnızca sonucu gösterir.
  */
 public class RoutePrinter {
 
     private static final Locale TR = Locale.forLanguageTag("tr-TR");
-    private static final int BAR_WIDTH = 20;
+    private static final int BAR_WIDTH = 20; // batarya çubuğunun karakter uzunluğu
 
     private final PrintStream out;
 
@@ -25,6 +25,7 @@ public class RoutePrinter {
         this.out = out;
     }
 
+    // Rotayı bacak bacak yazdırır, sonunda toplamları gösterir
     public void printRoute(Route route) {
         ElectricVehicle v = route.getVehicle();
         double capacity = v.getBatteryKwh();
@@ -42,6 +43,7 @@ public class RoutePrinter {
                     leg.getRoadKm(), leg.getEnergyKwh(), formatHours(leg.getDriveHours()));
             out.printf(TR, "    Çıkış  %s%n", batteryBar(leg.getDepartSocKwh(), capacity));
             out.printf(TR, "    Varış  %s%n", batteryBar(leg.getArrivalSocKwh(), capacity));
+            // Bacak istasyonda bitiyorsa şarj bilgisi de yazdırılır
             if (leg.endsAtStation()) {
                 ChargingStation s = leg.getStation();
                 out.printf(TR, "    ŞARJ: %s %s (%s %.0f kW, %.2f TL/kWh)%n",
@@ -63,6 +65,7 @@ public class RoutePrinter {
         line('-');
     }
 
+    // En ucuz ve en hızlı rotayı karşılaştırma tablosu olarak gösterir
     public void printComparison(Route cheapest, Route fastest) {
         out.println();
         line('=');
@@ -100,15 +103,17 @@ public class RoutePrinter {
         }
     }
 
-    /** Örnek: [██████████░░░░░░░░░░]  50% (42.5 kWh) */
+    // Batarya çubuğu. Örnek: [██████████░░░░░░░░░░]  50% (42.5 kWh)
     public String batteryBar(double socKwh, double capacityKwh) {
+        // Yüzde 0 ile 100 arasında sınırlanır
         double percent = Math.max(0, Math.min(100, socKwh / capacityKwh * 100));
+        // Dolu karakter sayısı hesaplanır
         int filled = (int) Math.round(percent / 100 * BAR_WIDTH);
         String bar = "█".repeat(filled) + "░".repeat(BAR_WIDTH - filled);
         return String.format(TR, "[%s] %3.0f%% (%.1f kWh)", bar, percent, socKwh);
     }
 
-    /** 1.75 saat -> "1 sa 45 dk" */
+    // Ondalık saati okunur biçime çevirir: 1,75 saat -> "1 sa 45 dk"
     public static String formatHours(double hours) {
         long totalMinutes = Math.round(hours * 60);
         long h = totalMinutes / 60;
@@ -125,6 +130,7 @@ public class RoutePrinter {
         return String.format(TR, "%.1f km", value);
     }
 
+    // 64 karakterlik ayırıcı çizgi yazdırır
     private void line(char c) {
         out.println(String.valueOf(c).repeat(64));
     }

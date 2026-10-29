@@ -12,7 +12,7 @@ import com.chargepath.model.Suv;
 import java.util.List;
 import java.util.Optional;
 
-/** Testlerde tekrar kullanılan hazır nesneler. Gerçek veriye benzer ama sabit ve küçük. */
+/** Testlerde ortak kullanılan sabit nesneler. Gerçek veriye benzer, küçük ve değişmezdir. */
 public final class TestData {
 
     public static final Location KIRKLARELI = new Location("Kırklareli", 41.7351, 27.2252, 216);
@@ -39,7 +39,7 @@ public final class TestData {
         return new DcFastStation("DC-1", "Test DC", "Test", at.getName(), at, 180, 15.0);
     }
 
-    /** Bellekte çalışan sahte istasyon deposu: JSON dosyası gerekmez (arayüz sayesinde mümkün). */
+    /** Bellekte çalışan sahte istasyon deposu. Arayüz kullanıldığı için JSON dosyası gerekmez. */
     public static StationRepository stations(ChargingStation... list) {
         List<ChargingStation> stations = List.of(list);
         return new StationRepository() {

@@ -2,7 +2,7 @@ package com.chargepath.data;
 
 import java.util.List;
 
-/** Yolculuk geçmişini saklama sözleşmesi. */
+// Yolculuk geçmişini kaydetme ve okuma arayüzü
 public interface TripHistoryRepository {
 
     void save(TripRecord record);

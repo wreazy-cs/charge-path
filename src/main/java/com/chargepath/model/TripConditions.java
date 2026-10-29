@@ -1,8 +1,8 @@
 package com.chargepath.model;
 
 /**
- * Yolculuk koşulları: hız, dış sıcaklık ve klima.
- * Enerji modeli bu bilgilere bakarak tüketimi artırır ya da azaltır.
+ * Yolculuk koşullarını tutar: ortalama hız, dış sıcaklık ve klima durumu.
+ * Enerji modeli tüketimi bu değerlere göre hesaplar.
  */
 public final class TripConditions {
 
@@ -11,6 +11,7 @@ public final class TripConditions {
     private final boolean climateOn;
 
     public TripConditions(double speedKmh, double temperatureC, boolean climateOn) {
+        // Gerçekçi olmayan değerler reddedilir
         if (speedKmh < 20 || speedKmh > 150) {
             throw new IllegalArgumentException("Hız 20 ile 150 km/s arasında olmalı: " + speedKmh);
         }
@@ -22,7 +23,8 @@ public final class TripConditions {
         this.climateOn = climateOn;
     }
 
-    /** Aşırı yükleme (overloading) örneği: klima belirtilmezse kapalı kabul edilir. */
+    // Aşırı yükleme (overloading): klima belirtilmezse kapalı kabul edilir.
+    // this(...) çağrısı ile doğrulamalar tek kurucuda kalır.
     public TripConditions(double speedKmh, double temperatureC) {
         this(speedKmh, temperatureC, false);
     }

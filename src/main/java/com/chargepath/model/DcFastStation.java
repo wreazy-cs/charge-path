@@ -1,9 +1,9 @@
 package com.chargepath.model;
 
 /**
- * DC (doğru akım) hızlı şarj istasyonu: hızlı ama pahalı.
- * Batarya doldukça şarj gücü düşer (şarj eğrisi). Basitleştirme olarak
- * %10-%80 aralığındaki ortalama gücün, tepe gücün %85'i olduğunu varsayıyoruz.
+ * DC (doğru akım) hızlı şarj istasyonu: hızlı, genellikle daha pahalıdır.
+ * Lityum iyon batarya doldukça şarj gücü düşer. Basitleştirme olarak %10 ile %80
+ * arasındaki ortalama gücün, en yüksek gücün %85'i olduğu varsayılmıştır.
  */
 public class DcFastStation extends ChargingStation {
 
@@ -14,6 +14,7 @@ public class DcFastStation extends ChargingStation {
         super(id, name, operator, city, location, powerKw, pricePerKwh);
     }
 
+    // İstasyon ve araç sınırlarından küçük olanı alınır, ortalama katsayıyla çarpılır
     @Override
     public double effectivePowerKw(ElectricVehicle vehicle) {
         return Math.min(getPowerKw(), vehicle.getMaxDcKw()) * AVERAGE_CURVE_FACTOR;

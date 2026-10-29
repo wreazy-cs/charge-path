@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+// VehicleFactory testleri: doğru alt sınıfın üretilmesi
 class VehicleFactoryTest {
 
     private VehicleRecord record(String type) {
@@ -25,6 +26,7 @@ class VehicleFactoryTest {
         return r;
     }
 
+    // type = "SUV" için Suv nesnesi üretilmelidir
     @Test
     void suvTypeCreatesSuv() {
         ElectricVehicle v = VehicleFactory.create(record("SUV"));
@@ -32,11 +34,13 @@ class VehicleFactoryTest {
         assertEquals(85.0, v.getBatteryKwh(), 1e-9);
     }
 
+    // Tip adı büyük/küçük harfe duyarlı olmamalıdır
     @Test
     void typeIsCaseInsensitive() {
         assertInstanceOf(Sedan.class, VehicleFactory.create(record("sedan")));
     }
 
+    // Bilinmeyen tip reddedilmelidir
     @Test
     void unknownTypeIsRejected() {
         assertThrows(IllegalArgumentException.class, () -> VehicleFactory.create(record("KAMYON")));

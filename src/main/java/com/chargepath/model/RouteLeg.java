@@ -1,21 +1,23 @@
 package com.chargepath.model;
 
 /**
- * Rotanın tek bir parçası (bacak): bir noktadan bir sonrakine sürüş,
- * varışta şarj istasyonuysa orada yapılan şarj.
+ * Rotanın tek bir bölümünü (bacak) temsil eder: bir noktadan sonrakine yapılan
+ * sürüş ve varış noktası istasyonsa orada yapılan şarj.
  *
- *   [from] ---- sürüş (roadKm, energyKwh) ----> [to] (+ varsa şarj)
+ *   [from] ---- sürüş ----> [to] (+ istasyonsa şarj)
+ *
+ * Tüm alanlar final tanımlıdır; hesaplanan bacak sonradan değiştirilemez.
  */
 public final class RouteLeg {
 
     private final Location from;
     private final Location to;
-    private final ChargingStation station;  // varış bir istasyon değilse null
+    private final ChargingStation station;  // varış noktası istasyon değilse null
     private final double roadKm;
-    private final double energyKwh;
-    private final double departSocKwh;
-    private final double arrivalSocKwh;
-    private final double chargedKwh;
+    private final double energyKwh;         // bu bölümde harcanan enerji
+    private final double departSocKwh;      // çıkıştaki batarya seviyesi
+    private final double arrivalSocKwh;     // varıştaki batarya seviyesi
+    private final double chargedKwh;        // istasyonda yüklenen enerji
     private final double chargeCost;
     private final double driveHours;
     private final double chargeHours;
@@ -36,7 +38,7 @@ public final class RouteLeg {
         this.chargeHours = chargeHours;
     }
 
-    /** Varış noktası bir şarj istasyonu mu? */
+    // Bölümün sonunda şarj istasyonu olup olmadığını döndürür
     public boolean endsAtStation() {
         return station != null;
     }

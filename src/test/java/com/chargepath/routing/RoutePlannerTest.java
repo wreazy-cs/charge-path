@@ -14,6 +14,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Rota planlayıcı testleri: yedek pay, şarj durakları ve stratejiler
 class RoutePlannerTest {
 
     private final TripConditions mild = new TripConditions(90, 20, false);
@@ -23,6 +24,7 @@ class RoutePlannerTest {
         return new RoutePlanner(TestData.stations(stations), new PhysicsEnergyModel());
     }
 
+    // Batarya yeterliyse rota durak içermemelidir
     @Test
     void enoughBatteryMeansDirectTripWithoutStops() {
         RoutePlanner planner = plannerWith(TestData.dcStation(TestData.LULEBURGAZ));
@@ -35,6 +37,7 @@ class RoutePlannerTest {
         assertEquals(0.0, route.getTotalCost(), 1e-9);
     }
 
+    // Batarya yetersizse yoldaki istasyonda şarj durağı olmalıdır
     @Test
     void lowBatteryForcesAChargingStop() {
         RoutePlanner planner = plannerWith(TestData.dcStation(TestData.LULEBURGAZ));
@@ -46,9 +49,10 @@ class RoutePlannerTest {
         assertEquals("DC-1", route.getLegs().get(0).getStation().getId());
     }
 
+    // İstasyon yoksa ve batarya yetersizse boş sonuç dönmelidir
     @Test
     void noRouteWhenBatteryAndStationsAreNotEnough() {
-        RoutePlanner planner = plannerWith(); // hiç istasyon yok
+        RoutePlanner planner = plannerWith(); // istasyon yok
         TripRequest request = new TripRequest(car, TestData.KIRKLARELI, TestData.ISTANBUL, 30, mild);
 
         Optional<Route> route = planner.plan(request, new CheapestStrategy());
@@ -56,6 +60,7 @@ class RoutePlannerTest {
         assertTrue(route.isEmpty());
     }
 
+    // Hiçbir bacakta batarya %10 yedek payın altına düşmemelidir
     @Test
     void everyLegKeepsTheReserve() {
         RoutePlanner planner = plannerWith(TestData.dcStation(TestData.LULEBURGAZ), TestData.acStation(TestData.EDIRNE));
@@ -69,9 +74,10 @@ class RoutePlannerTest {
         }
     }
 
+    // En ucuz rota daha pahalı, en hızlı rota daha yavaş olmamalıdır
     @Test
     void cheapestIsNeverMoreExpensiveAndFastestIsNeverSlower() {
-        // Aynı yerde biri ucuz/yavaş (AC), biri pahalı/hızlı (DC) iki istasyon
+        // Aynı konumda ucuz/yavaş (AC) ve pahalı/hızlı (DC) iki istasyon
         ChargingStation ac = TestData.acStation(TestData.LULEBURGAZ);
         ChargingStation dc = TestData.dcStation(TestData.LULEBURGAZ);
         RoutePlanner planner = plannerWith(ac, dc);

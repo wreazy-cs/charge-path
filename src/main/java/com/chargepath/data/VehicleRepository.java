@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Araç verisine erişim sözleşmesi (Repository kalıbı).
- * Verinin JSON'dan mı, veritabanından mı geldiğini kullanan taraf bilmez.
+ * Araç verilerine erişim arayüzü (Repository kalıbı).
+ * Kullanan sınıf, verinin hangi kaynaktan geldiğini bilmez.
  */
 public interface VehicleRepository {
 

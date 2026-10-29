@@ -1,8 +1,8 @@
-# ChargePath ⚡ Elektrikli Araç Şarj ve Rota Planlama
+# ChargePath: Elektrikli Araç Şarj ve Rota Planlama
 
-Kırklareli Üniversitesi, Yazılım Mühendisliği, **Nesneye Yönelik Programlama** dönem projesi.
+Kırklareli Üniversitesi Yazılım Mühendisliği, **Nesneye Yönelik Programlama** dersi dönem projesi.
 
-ChargePath, bir elektrikli aracın **kalan bataryasıyla** belirli yol koşullarında ne kadar gidebileceğini hesaplayan ve Trakya bölgesindeki şarj istasyonlarını kullanarak **en ucuz** ya da **en hızlı** rotayı bulan bir **Java konsol uygulamasıdır**.
+ChargePath, elektrikli bir aracın kalan bataryasıyla ne kadar mesafe gidebileceğini hesaplayan ve Trakya bölgesindeki şarj istasyonlarını kullanarak **en ucuz** ya da **en hızlı** rotayı bulan bir Java konsol uygulamasıdır.
 
 ```
  DEMO: Togg T10X Long Range RWD, %40 batarya, kış (2 °C), klima açık, 110 km/s
@@ -13,204 +13,173 @@ ChargePath, bir elektrikli aracın **kalan bataryasıyla** belirli yol koşullar
  Durak sayısı                    2              2
 ```
 
-## İçindekiler
-
-1. [Özellikler](#özellikler)
-2. [Kurulum ve çalıştırma](#kurulum-ve-çalıştırma)
-3. [Proje yapısı](#proje-yapısı)
-4. [UML sınıf diyagramı](#uml-sınıf-diyagramı)
-5. [Nesneye yönelik programlama ilkeleri](#nesneye-yönelik-programlama-ilkeleri)
-6. [SOLID ilkeleri](#solid-ilkeleri)
-7. [Tasarım kalıpları](#tasarım-kalıpları)
-8. [Algoritma: batarya kısıtlı Dijkstra](#algoritma-batarya-kısıtlı-dijkstra)
-9. [Enerji modeli](#enerji-modeli)
-10. [Veri ve kalıcılık](#veri-ve-kalıcılık)
-11. [Birim testleri](#birim-testleri)
-12. [Varsayımlar ve sınırlamalar](#varsayımlar-ve-sınırlamalar)
-
 ## Özellikler
 
-| Menü | Ne yapar? |
+| Menü | Açıklama |
 |---|---|
-| 1. Araçları listele | 4 gerçek araç (Togg T10X, Togg T10F, Tesla Model Y, Tesla Model 3) ve teknik değerleri |
-| 2. İstasyonları listele | Trakya'da 28 şarj istasyonu (17 DC, 11 AC), güç ve kWh fiyatı |
-| 3. Menzil hesapla | Batarya yüzdesi, hız, sıcaklık ve klimaya göre tahmini menzil |
-| 4. Rota planla | Seçilen stratejiyle (en ucuz / en hızlı) şarj duraklı rota, bacak bacak batarya çubuğu |
-| 5. Karşılaştır | Aynı yolculuk için iki stratejinin ücret, süre ve durak karşılaştırması |
-| 6. Yolculuk geçmişi | Planlanan rotalar `data/trip_history.json` dosyasına kaydedilir, program kapansa da kaybolmaz |
-| 7. Demo senaryosu | Edirne'den İstanbul'a, kışın, %40 bataryayla hazır senaryo |
+| 1. Araçları listele | 4 araç: Togg T10X, Togg T10F, Tesla Model Y, Tesla Model 3 |
+| 2. İstasyonları listele | Trakya'da 28 şarj istasyonu (17 DC, 11 AC) |
+| 3. Menzil hesapla | Batarya, hız, sıcaklık ve klimaya göre tahmini menzil |
+| 4. Rota planla | Seçilen stratejiye göre şarj duraklı rota |
+| 5. Karşılaştır | Aynı yolculuk için iki stratejinin karşılaştırması |
+| 6. Yolculuk geçmişi | Planlanan rotalar dosyaya kaydedilir ve program kapatıldığında korunur |
+| 7. Demo | Edirne'den İstanbul'a, kış koşullarında, %40 bataryayla hazır senaryo |
 
 ## Kurulum ve çalıştırma
 
-Gereksinimler: **JDK 21 veya üstü**, Maven (IntelliJ IDEA içinde hazır gelir). İnternet bağlantısı gerekmez, tüm veri `data/` klasöründedir.
+Gereksinimler: **JDK 21** ve Maven (IntelliJ IDEA ile birlikte gelir). İnternet bağlantısı gerekmez; tüm veriler `data/` klasöründedir.
 
-**IntelliJ IDEA ile**
+**IntelliJ IDEA:**
 
-1. Projeyi açın, sağdaki Maven panelinden **Reload** yapın.
-2. `src/main/java/com/chargepath/app/ChargePathApp.java` dosyasını açıp ▶ ile çalıştırın.
+1. Projeyi açın ve Maven panelinden **Reload** yapın.
+2. `app/ChargePathApp.java` dosyasını çalıştırın.
 3. Testler için `src/test/java` klasörüne sağ tıklayıp **Run 'All Tests'** seçin.
 
-> Çalışma dizini (working directory) proje kök klasörü olmalıdır, çünkü veriler `data/` klasöründen okunur. IntelliJ bunu varsayılan olarak böyle ayarlar.
-
-**Komut satırı ile**
+**Komut satırı:**
 
 ```bash
-mvn test                                   # 30 birim testini çalıştırır
+mvn test                                   # 30 birim testi
 mvn compile exec:java                      # menülü uygulama
-mvn compile exec:java -Dexec.args="--demo" # sadece demo senaryosu
+mvn compile exec:java -Dexec.args="--demo" # yalnızca demo
 ```
+
+> Veriler `data/` klasöründen okunduğu için program proje kök klasöründen çalıştırılmalıdır.
 
 ## Proje yapısı
 
 ```
 charge-path/
-├── data/
-│   ├── vehicles_fallback.json   araç teknik verileri (çevrimdışı)
-│   ├── stations_fallback.json   şarj istasyonları (çevrimdışı)
-│   ├── cities.json              başlangıç/varış şehirleri
-│   └── trip_history.json        program çalışınca oluşur (yolculuk geçmişi)
-├── docs/
-│   ├── uml-model.(mmd|png|pdf|svg)    alan modeli UML diyagramı
-│   └── uml-mimari.(mmd|png|pdf|svg)   mimari UML diyagramı
-├── src/main/java/com/chargepath/
-│   ├── model/     Location, TripConditions, ElectricVehicle, Sedan, Suv,
-│   │              ChargingStation, AcStation, DcFastStation, RouteLeg, Route
-│   ├── energy/    EnergyModel, PhysicsEnergyModel
-│   ├── routing/   RouteStrategy, CheapestStrategy, FastestStrategy, TripRequest, RoutePlanner
-│   ├── data/      *Repository arayüzleri, Json*Repository, VehicleFactory, StationFactory,
-│   │              TripRecord, JsonFiles, DataAccessException, *Record (DTO)
-│   └── app/       ChargePathApp, ConsoleMenu, InputReader, RoutePrinter
-└── src/test/java/com/chargepath/   30 JUnit 5 testi
+├── data/       araç, istasyon ve şehir verileri (JSON)
+├── docs/       UML diyagramları
+└── src/
+    ├── main/java/com/chargepath/
+    │   ├── model/     araç, istasyon, konum, rota
+    │   ├── energy/    enerji hesabı
+    │   ├── routing/   rota planlama (Dijkstra) ve stratejiler
+    │   ├── data/      JSON okuma/yazma, fabrikalar
+    │   └── app/       konsol menüsü ve main
+    └── test/java/     30 birim testi
 ```
 
-Toplam **37 sınıf ve arayüz**. Paketler katman katman ayrılmıştır: `app` kullanıcıyla konuşur, `routing` karar verir, `energy` hesaplar, `data` okur/yazar, `model` alanı temsil eder.
+Proje **37 sınıf ve arayüzden** oluşur. Her paketin tek bir sorumluluğu vardır: `app` kullanıcıyla etkileşimi, `routing` rota kararını, `energy` enerji hesabını, `data` dosya işlemlerini, `model` ise temel nesneleri içerir.
 
 ## UML sınıf diyagramları
 
-Diyagram okunabilir olsun diye ikiye bölündü. Resimler GitHub'da küçük görünür; **yakınlaştırmak için PDF (vektör, kayıpsız büyür) ya da SVG sürümünü açın.**
+Diyagram okunabilirlik için iki parçaya ayrılmıştır. Ayrıntılı inceleme için **PDF sürümü** önerilir.
 
-### 1. Alan modeli (`model` paketi): araç, istasyon, rota
+### 1. Model: araç, istasyon, rota
 
-[PDF olarak aç (yakınlaştırılabilir)](docs/uml-model.pdf) · [SVG](docs/uml-model.svg)
+[PDF](docs/uml-model.pdf) · [SVG](docs/uml-model.svg)
 
-![Alan modeli UML](docs/uml-model.png)
+![Model UML](docs/uml-model.png)
 
-### 2. Mimari: katmanlar, arayüzler, kalıplar
+### 2. Mimari: paketler, arayüzler, kalıplar
 
-Renkler: mavi `app`, sarı `routing`, yeşil `energy`, mor `data`, gri `model`. Kesik çizgi bağımlılık, içi boş üçgen kalıtım ya da arayüz uygulama, düz ok ilişkidir.
+Renkler: mavi `app`, sarı `routing`, yeşil `energy`, mor `data`, gri `model`.
 
-[PDF olarak aç (yakınlaştırılabilir)](docs/uml-mimari.pdf) · [SVG](docs/uml-mimari.svg)
+[PDF](docs/uml-mimari.pdf) · [SVG](docs/uml-mimari.svg)
 
 ![Mimari UML](docs/uml-mimari.png)
 
-Kaynak dosyalar: `docs/uml-model.mmd` ve `docs/uml-mimari.mmd` (Mermaid).
-
 ## Nesneye yönelik programlama ilkeleri
 
-| İlke | Projede nerede? |
+| İlke | Uygulama |
 |---|---|
-| **Sınıf ve nesne** | Her araç, istasyon ve şehir JSON'dan okunup bir nesneye dönüşür. |
-| **Kapsülleme** | Tüm alanlar `private`. Batarya seviyesi (`socKwh`) sadece `consume()` ve `charge()` ile değişir; bu metotlar seviyenin 0'ın altına ya da kapasitenin üstüne çıkmasını engeller. `Route.getLegs()` salt okunur liste döner. |
-| **Kalıtım** | `Sedan` ve `Suv`, `ElectricVehicle`'dan; `AcStation` ve `DcFastStation`, `ChargingStation`'dan türer. |
-| **Soyutlama** | `ElectricVehicle` ve `ChargingStation` soyut (`abstract`) sınıflardır; `EnergyModel`, `RouteStrategy` ve depolar arayüzdür. |
-| **Çok biçimlilik** | `station.effectivePowerKw(vehicle)` çağrısı AC istasyonda aracın AC sınırını, DC istasyonda DC sınırını ve şarj eğrisini kullanır. `vehicle.getDragFactor()` sedan ve SUV için farklı sonuç verir. Çağıran kod hangi alt sınıf olduğunu bilmez. |
+| **Kapsülleme** | Tüm alanlar `private` tanımlıdır. Batarya seviyesi yalnızca `consume()` ve `charge()` ile değişir; bu metotlar seviyenin 0'ın altına düşmesini ve kapasiteyi aşmasını engeller. |
+| **Kalıtım** | `Sedan` ve `Suv`, `ElectricVehicle` sınıfından; `AcStation` ve `DcFastStation`, `ChargingStation` sınıfından türer. |
+| **Soyutlama** | `ElectricVehicle` ve `ChargingStation` soyut sınıftır; `EnergyModel`, `RouteStrategy` ve depolar arayüzdür. |
+| **Çok biçimlilik** | `effectivePowerKw()` AC ve DC istasyonda farklı hesaplanır; `getDragFactor()` sedan ve SUV için farklı değer döndürür. |
 
 ## SOLID ilkeleri
 
 | İlke | Uygulama |
 |---|---|
-| **S** Tek sorumluluk | `RoutePlanner` sadece rota planlar; ekrana yazmak `RoutePrinter`'ın, girişi okumak `InputReader`'ın, dosya okumak depoların işidir. |
-| **O** Açık/kapalı | Yeni bir strateji (örneğin "en az durak") için `RouteStrategy`'yi uygulayan yeni bir sınıf yazmak yeterlidir, `RoutePlanner` değişmez. Yeni istasyon tipi için sadece `StationFactory`'ye bir satır eklenir. |
-| **L** Liskov yerine geçme | Planlayıcı `ChargingStation` ile çalışır; `AcStation` ya da `DcFastStation` verilmesi sonucu bozmaz. Kodda `instanceof` ile tip kontrolü yoktur. |
-| **I** Arayüz ayrımı | Arayüzler küçüktür: `EnergyModel` (2 metot), `RouteStrategy` (3 metot), `StationRepository` (2 metot). Kimse kullanmadığı metodu uygulamak zorunda kalmaz. |
-| **D** Bağımlılığın tersine çevrilmesi | `RoutePlanner` somut sınıflara değil, `StationRepository` ve `EnergyModel` arayüzlerine bağlıdır ve bunları kurucudan alır. Tüm nesneler sadece `ChargePathApp.main` içinde üretilir. Bu sayede testlerde JSON dosyası yerine bellekte çalışan sahte bir depo verilebilir. |
+| **S** Tek sorumluluk | `RoutePlanner` yalnızca rota planlar. Ekran çıktısı `RoutePrinter`, klavye girişi `InputReader` tarafından yapılır. |
+| **O** Açık/kapalı | Yeni bir strateji, `RoutePlanner` değiştirilmeden yeni bir sınıfla eklenebilir. |
+| **L** Liskov yerine geçme | Planlayıcı AC ve DC istasyonlarla aynı şekilde çalışır; kodda `instanceof` kontrolü yoktur. |
+| **I** Arayüz ayrımı | Arayüzler küçük tutulmuştur: `EnergyModel` 2, `RouteStrategy` 3 metot içerir. |
+| **D** Bağımlılığın tersine çevrilmesi | `RoutePlanner` somut sınıflara değil arayüzlere bağlıdır. Tüm nesneler `main` içinde oluşturulur; bu sayede testlerde sahte depo kullanılabilir. |
 
 ## Tasarım kalıpları
 
-| Kalıp | Sınıflar | Neden? |
+| Kalıp | Sınıflar | Amaç |
 |---|---|---|
-| **Strategy** | `RouteStrategy`, `CheapestStrategy`, `FastestStrategy` | Aynı Dijkstra algoritması, farklı "maliyet" tanımlarıyla çalışır. |
-| **Factory** | `VehicleFactory`, `StationFactory` | JSON'daki `type` alanına bakıp doğru alt sınıfı (`Sedan`/`Suv`, `AcStation`/`DcFastStation`) üretme kararı tek yerde verilir. |
-| **Repository** | `StationRepository`, `VehicleRepository`, `CityRepository`, `TripHistoryRepository` | Verinin nereden geldiği (JSON, ileride veritabanı) programın geri kalanından gizlenir. |
-| **Static factory method** | `TripRecord.from(route)` | Bir rotadan geçmiş kaydı üretmenin okunaklı yolu. |
+| **Strategy** | `CheapestStrategy`, `FastestStrategy` | Aynı algoritmanın farklı maliyet tanımlarıyla çalışması |
+| **Factory** | `VehicleFactory`, `StationFactory` | JSON'daki tipe göre uygun alt sınıfın üretilmesi |
+| **Repository** | `*Repository` arayüzleri | Veri kaynağının programın geri kalanından ayrılması |
 
 ## Algoritma: batarya kısıtlı Dijkstra
 
-Klasik Dijkstra en kısa yolu bulur. Elektrikli araçta "en kısa" yetmez: **batarya bitmemeli**. Bu yüzden algoritma her yeri **batarya seviyesiyle birlikte** düşünür.
+Klasik Dijkstra en kısa yolu bulur; elektrikli araçta ise bataryanın yol boyunca yeterli kalması da gerekir. Bu nedenle her durum **yer ve batarya yüzdesi** birlikte ele alınarak tanımlanır.
 
 ```
- Durum = (yer, batarya %)
-
-  %80   . . . [Lüleburgaz DC] ──── sür ────► [İstanbul]  (varışta ≥ %10 kalmalı)
-              ▲ şarj (ücret / süre ekler)
-  %22   . . . [Lüleburgaz DC]
-              ▲ sür (yol enerji yer, batarya düşer)
+  %80   [Lüleburgaz DC] ──── sürüş ────► [İstanbul]   (varışta en az %10)
+              ▲ şarj
+  %22   [Lüleburgaz DC]
+              ▲ sürüş (batarya azalır)
   %40   [Edirne]
 ```
 
-1. **Düğümler:** başlangıç, varış ve 28 istasyon. Her biri %0 ile %100 arasında 101 batarya katına sahiptir.
-2. **Sür kenarı:** bir yerden diğerine. Varışta bataryada **%10 yedek** kalmıyorsa bu kenar yoktur. Kısıt budur.
-3. **Şarj kenarı:** bir istasyonda daha yüksek bir yüzdeye çıkmak (en fazla %80; DC şarj bundan sonra belirgin yavaşlar).
-4. **Ağırlık:** stratejiden gelir. En ucuzda ödenen TL, en hızlıda sürüş + şarj süresi + her durak için 5 dakika.
-5. `PriorityQueue` en düşük ağırlıklı durumu önce çıkarır; varış ilk kez çıktığında en iyi rota bulunmuş olur.
+- **Sürüş:** Bir yerden diğerine geçiştir. Varışta bataryada en az **%10 yedek** kalmıyorsa geçersizdir.
+- **Şarj:** İstasyonda batarya en fazla **%80'e** yükseltilir. Lityum iyon batarya %80'den sonra belirgin şekilde yavaş dolar.
+- **Ağırlık:** En ucuz rotada ödenen ücret, en hızlı rotada sürüş süresi, şarj süresi ve durak başına 5 dakikadır.
 
-Karmaşıklık: yaklaşık 30 yer × 101 seviye × 2 aşama ≈ 6 000 durum; bir rota bir saniyenin çok altında hesaplanır.
-
-Mesafe: iki nokta arasındaki kuş uçuşu mesafe **Haversine** formülüyle hesaplanır ve karayolu tahmini için **1,3** katsayısıyla çarpılır.
+Mesafe, **Haversine** formülüyle hesaplanan kuş uçuşu değerin 1,3 ile çarpılmasıyla elde edilir.
 
 ## Enerji modeli
 
 ```
- Toplam (kWh) = Sürüş + Klima + Yokuş − Rejeneratif kazanç
-
- Sürüş = km × tüketim × hızÇarpanı × sıcaklıkÇarpanı
-         hızÇarpanı = 0,6 + 0,4 × hava direnci × (hız / 90)²
- Klima = klima gücü (kW) × süre (saat)
- Yokuş = (araç + 150 kg) × 9,81 × Δh / 3 600 000 / 0,90
- Rejen = (araç + 150 kg) × 9,81 × |Δh| / 3 600 000 × 0,60
+ Toplam = Sürüş + Klima + Yokuş - Rejeneratif kazanç
 ```
 
-| Değişken | Etki |
+| Etken | Etki |
 |---|---|
-| Hız | Hava direnci hızın karesiyle artar. 90 km/s katalog tüketimidir. |
-| Gövde | SUV'un hava direnci sedana göre %15 fazla kabul edilir. |
-| Sıcaklık | 20 °C altında her derece %0,5 ek tüketim (en fazla %25). |
-| Klima | Isıtma 18 °C altında 1 kW + derece başına 0,1 kW; soğutma 24 °C üstünde 0,5 kW + derece başına 0,1 kW. |
-| Eğim | Yükseklik verileri SRTM'den alınmıştır. Tırmanışta enerji harcanır, inişte %60'ı geri kazanılır. |
+| Hız | Hava direnci hızın karesiyle artar; yüksek hızda tüketim belirgin şekilde yükselir. |
+| Araç tipi | SUV'un hava direnci sedana göre %15 fazla kabul edilmiştir. |
+| Sıcaklık | 20 °C altında derece başına %0,5 ek tüketim uygulanır. |
+| Klima | Isıtma, soğutmaya göre daha fazla enerji gerektirir (1 ile 4 kW arası). |
+| Eğim | Tırmanışta enerji harcanır, inişte rejeneratif frenle %60'ı geri kazanılır. |
 
-## Veri ve kalıcılık
+## Veriler
 
-| Dosya | İçerik | Kaynak |
-|---|---|---|
-| `vehicles_fallback.json` | Batarya, tüketim, ağırlık, DC/AC şarj gücü | ev-database.org, evkx.net |
-| `stations_fallback.json` | 28 istasyon: konum, tip, güç, kWh fiyatı, rakım | Konumların bir kısmı © OpenStreetMap katkıda bulunanları; fiyatlar chargemate.io ve piyasa ortalaması; rakım SRTM 90 m |
-| `cities.json` | 12 şehir merkezi | Yaklaşık koordinat, rakım SRTM 90 m (OpenTopoData) |
-| `trip_history.json` | Planlanan yolculuklar | Program tarafından yazılır |
+| Dosya | İçerik |
+|---|---|
+| `vehicles_fallback.json` | 4 aracın batarya, tüketim, ağırlık ve şarj gücü değerleri |
+| `stations_fallback.json` | 28 istasyonun konum, tip, güç ve fiyat bilgisi |
+| `cities.json` | 12 şehir merkezi |
+| `trip_history.json` | Çalışma sırasında oluşturulur, planlanan yolculukları içerir |
 
-Uygulama tamamen **çevrimdışı** çalışır. JSON okuma/yazma için Gson kütüphanesi kullanılır.
+JSON işlemleri için Gson kütüphanesi kullanılır. Uygulama tamamen çevrimdışı çalışır.
 
-> **Uyarı:** İstasyon konumları simülasyon amaçlı işaretlenmiştir, gerçek istasyonların varlığı ve güncelliği garanti edilmez. Güç ve fiyat değerlerinin bir kısmı varsayımdır; her kaydın `notes` alanında belirtilmiştir.
+> **Not:** İstasyon konumları simülasyon amacıyla belirlenmiştir; gerçek istasyonların varlığı ve güncelliği garanti edilmez. Bazı güç ve fiyat değerleri varsayımdır ve ilgili kaydın `notes` alanında belirtilmiştir.
 
 ## Birim testleri
 
-`mvn test` ile **30 test** çalışır (JUnit 5).
+`mvn test` komutuyla **30 test** çalışır (JUnit 5).
 
-| Test sınıfı | Ne doğrulanıyor? |
+| Test sınıfı | Kapsam |
 |---|---|
-| `LocationTest` (4) | Haversine mesafesi, simetri, geçersiz enlem reddi |
-| `ElectricVehicleTest` (6) | Kapsülleme kuralları: tüketim, kapasite sınırı, geçersiz değer, çok biçimlilik |
-| `ChargingStationTest` (3) | AC gücünü aracın sınırlaması, DC'nin hızı, ücret hesabı |
-| `PhysicsEnergyModelTest` (5) | Katalog tüketimi, hızın etkisi, eğim ve rejeneratif fren, kış menzili, klima |
-| `VehicleFactoryTest` (3) | Doğru alt sınıf üretimi, büyük/küçük harf, bilinmeyen tip |
-| `JsonRepositoryTest` (4) | Gerçek veri dosyalarının okunması, eksik dosya hatası, geçmişin kalıcılığı |
-| `RoutePlannerTest` (5) | Doğrudan yolculuk, zorunlu şarj durağı, rota yoksa boş sonuç, yedek payın korunması, stratejilerin doğru karar vermesi |
+| `LocationTest` (4) | Mesafe hesabı ve geçersiz koordinat |
+| `ElectricVehicleTest` (6) | Batarya kuralları ve çok biçimlilik |
+| `ChargingStationTest` (3) | AC/DC şarj gücü, süre ve ücret |
+| `PhysicsEnergyModelTest` (5) | Hız, eğim, sıcaklık ve klimanın etkisi |
+| `VehicleFactoryTest` (3) | Doğru araç tipinin üretilmesi |
+| `JsonRepositoryTest` (4) | Dosya okuma, eksik dosya ve kalıcılık |
+| `RoutePlannerTest` (5) | Duraksız rota, zorunlu şarj, rota bulunamaması, yedek pay ve stratejiler |
 
-## Varsayımlar ve sınırlamalar
+## Varsayımlar
 
-- Karayolu mesafesi gerçek yol ağı yerine kuş uçuşu × 1,3 ile tahmin edilir.
-- Şarj gücü sabit kabul edilir (DC için tepe gücün %85'i). Gerçekte şarj eğrisi bataryanın doluluğuna göre değişir.
-- Trafik, rüzgâr ve istasyonda bekleme kuyruğu hesaba katılmaz.
-- Başlangıçtaki bataryanın ücreti hesaba katılmaz, sadece yolda ödenen şarj ücreti gösterilir.
+- Karayolu mesafesi, kuş uçuşu mesafenin 1,3 ile çarpılmasıyla tahmin edilir.
+- DC şarj gücü sabit kabul edilir (en yüksek gücün %85'i).
+- Trafik, rüzgâr ve istasyonda bekleme süresi hesaba katılmaz.
+- Yalnızca yolculuk sırasında ödenen şarj ücreti hesaplanır.
+
+## Kaynaklar
+
+- İstasyon konumlarının bir kısmı: © [OpenStreetMap](https://www.openstreetmap.org/copyright) katkıda bulunanları (ODbL lisansı)
+- Rakım verileri: SRTM 90 m ([OpenTopoData](https://www.opentopodata.org/))
+- Araç değerleri: [ev-database.org](https://ev-database.org), [evkx.net](https://evkx.net)
+- Şarj fiyatları: [chargemate.io](https://chargemate.io) ve piyasa ortalaması
 
 ## Geliştirici
 

@@ -3,12 +3,11 @@ package com.chargepath.model;
 import java.util.Objects;
 
 /**
- * Tüm şarj istasyonlarının ortak şablonu (soyut sınıf).
+ * Tüm şarj istasyonları için ortak soyut üst sınıf.
  *
- * Her istasyon tipi "bu araca gerçekte kaç kW verebilirim?" sorusunu
- * kendine göre cevaplar (effectivePowerKw). Rota planlayıcı istasyonun
- * AC mi DC mi olduğunu sormaz (instanceof yok), sadece bu metodu çağırır.
- * Bu, Liskov yerine geçme ilkesinin (LSP) uygulamasıdır.
+ * Her istasyon tipi, araca verebileceği gerçek gücü effectivePowerKw() ile kendisi
+ * hesaplar. Rota planlayıcı istasyonun tipini kontrol etmeden bu metodu çağırır;
+ * böylece AC ve DC istasyonlar birbirinin yerine kullanılabilir (Liskov ilkesi).
  */
 public abstract class ChargingStation {
 
@@ -35,19 +34,19 @@ public abstract class ChargingStation {
         this.pricePerKwh = pricePerKwh;
     }
 
-    /** Bu istasyonun verilen araca ortalama olarak verebileceği güç (kW). */
+    // İstasyonun verilen araca ortalama verebileceği güç (kW)
     public abstract double effectivePowerKw(ElectricVehicle vehicle);
 
-    /** "AC" ya da "DC". */
+    // "AC" ya da "DC"
     public abstract String getTypeName();
 
-    /** Belirtilen enerjiyi bu istasyonda bu araca yüklemek kaç saat sürer? */
+    // Şarj süresi (saat) = enerji / güç
     public double chargingTimeHours(double kwh, ElectricVehicle vehicle) {
         if (kwh <= 0) return 0;
         return kwh / effectivePowerKw(vehicle);
     }
 
-    /** Belirtilen enerjinin ücreti (TL). */
+    // Şarj ücreti (TL) = enerji x birim fiyat
     public double chargingCost(double kwh) {
         return Math.max(0, kwh) * pricePerKwh;
     }
@@ -80,6 +79,7 @@ public abstract class ChargingStation {
         return pricePerKwh;
     }
 
+    // Kimliği (id) aynı olan istasyonlar eşit kabul edilir
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

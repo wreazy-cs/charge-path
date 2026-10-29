@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Enerji modeli testleri: hız, eğim, sıcaklık ve klimanın etkisi
 class PhysicsEnergyModelTest {
 
     private final PhysicsEnergyModel model = new PhysicsEnergyModel();
@@ -17,6 +18,7 @@ class PhysicsEnergyModelTest {
     private final Location high = new Location("Yüksek", 41.0, 27.1, 500);
     private final TripConditions mild = new TripConditions(90, 20, false);
 
+    // Referans koşullarda sonuç katalog tüketimine eşit olmalıdır
     @Test
     void flatRoadAtReferenceSpeedMatchesCatalogConsumption() {
         // 90 km/s, 20 °C, klima kapalı, düz yol: 100 km x 150 Wh/km = 15 kWh
@@ -25,6 +27,7 @@ class PhysicsEnergyModelTest {
         assertEquals(15.0, model.legEnergyKwh(car, a, b, 100, mild), 1e-6);
     }
 
+    // Hız arttıkça tüketim belirgin şekilde artmalıdır
     @Test
     void higherSpeedNeedsMoreEnergy() {
         double slow = model.legEnergyKwh(car, low, low, 100, new TripConditions(80, 20, false));
@@ -32,6 +35,7 @@ class PhysicsEnergyModelTest {
         assertTrue(fast > slow * 1.3, "130 km/s, 80 km/s'den belirgin şekilde fazla harcamalı");
     }
 
+    // Tırmanışta daha fazla, inişte daha az enerji harcanmalıdır
     @Test
     void uphillCostsMoreThanDownhillThanksToRegenerativeBraking() {
         double up = model.legEnergyKwh(car, low, high, 10, mild);
@@ -41,6 +45,7 @@ class PhysicsEnergyModelTest {
         assertTrue(down < flat, "İnişte rejeneratif fren enerji geri kazandırmalı");
     }
 
+    // Kışın ısıtma açıkken menzil en az %15 azalmalıdır
     @Test
     void winterWithHeatingShortensRange() {
         double summerRange = model.rangeKm(car, 40, mild);
@@ -48,6 +53,7 @@ class PhysicsEnergyModelTest {
         assertTrue(winterRange < summerRange * 0.85, "Kışın ısıtmayla menzil en az %15 düşmeli");
     }
 
+    // Klima açıkken tüketim daha yüksek olmalıdır
     @Test
     void climateOnUsesMoreEnergyThanOff() {
         double off = model.legEnergyKwh(car, low, low, 50, new TripConditions(90, 35, false));

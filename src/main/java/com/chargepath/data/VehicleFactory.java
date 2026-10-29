@@ -5,25 +5,26 @@ import com.chargepath.model.Sedan;
 import com.chargepath.model.Suv;
 
 /**
- * Fabrika (Factory) tasarım kalıbı.
+ * Factory (fabrika) tasarım kalıbı.
  *
- * "Hangi alt sınıftan nesne üretilecek?" kararı tek bir yerde verilir.
- * Programın geri kalanı Sedan mı Suv mu olduğunu bilmeden ElectricVehicle ile çalışır.
- * Yeni bir araç tipi eklenirse (örn. Hatchback) sadece bu sınıf değişir.
+ * Hangi alt sınıftan nesne üretileceği kararı tek bir yerde verilir.
+ * Programın geri kalanı aracın tipini bilmeden ElectricVehicle ile çalışır.
+ * Yeni bir araç tipi (örneğin Hatchback) yalnızca bu sınıfta değişiklik gerektirir.
  *
- *   VehicleRecord(type="SUV")   --create()-->  new Suv(...)
- *   VehicleRecord(type="SEDAN") --create()-->  new Sedan(...)
+ *   type = "SUV"   ->  new Suv(...)
+ *   type = "SEDAN" ->  new Sedan(...)
  */
 public final class VehicleFactory {
 
+    // Yalnızca static metot içerir, nesnesi oluşturulmaz
     private VehicleFactory() {
-        // Sadece static metot içerir, nesnesi üretilmez.
     }
 
     public static ElectricVehicle create(VehicleRecord r) {
         if (r == null || r.type == null) {
             throw new IllegalArgumentException("Araç kaydı ya da tipi boş");
         }
+        // trim ve toUpperCase ile büyük/küçük harf ve boşluk farkları yok sayılır
         return switch (r.type.trim().toUpperCase()) {
             case "SEDAN" -> new Sedan(r.id, r.brand, r.model, r.batteryKwh, r.consumptionWhPerKm,
                     r.massKg, r.maxDcKw, r.maxAcKw);

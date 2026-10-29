@@ -9,13 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Yolculuk geçmişine kaydedilen özet. trip_history.json dosyasına yazılır,
- * program kapanıp açılsa da kaybolmaz (kalıcılık).
+ * Yolculuk geçmişine kaydedilen özet bilgi.
+ * trip_history.json dosyasına yazıldığı için program kapatıldığında kaybolmaz (kalıcılık).
  */
 public class TripRecord {
 
+    // Tarih biçimi: "29.10.2026 14:30"
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
+    // Gson dosyadan okurken alanları doldurduğu için final tanımlanmamıştır
     private String date;
     private String vehicle;
     private String from;
@@ -44,10 +46,12 @@ public class TripRecord {
     }
 
     /**
-     * Statik üretici metot (static factory method): bir rotadan kayıt üretir.
-     * new ile tek tek alan doldurmak yerine "Route ver, kaydı al" der.
+     * Statik üretici metot (static factory method): rotadan kayıt oluşturur.
+     * 11 parametrelik kurucu yerine tek bir Route nesnesi yeterlidir.
+     * LocalDate.now() da aynı yaklaşımı kullanır.
      */
     public static TripRecord from(Route route) {
+        // Şarj yapılan istasyonların adları listelenir
         List<String> stopNames = new ArrayList<>();
         for (RouteLeg leg : route.getLegs()) {
             if (leg.endsAtStation()) stopNames.add(leg.getStation().getId() + " " + leg.getStation().getName());
@@ -66,6 +70,7 @@ public class TripRecord {
                 stopNames);
     }
 
+    // Virgülden sonra 2 basamağa yuvarlar (12,3456 -> 12,35)
     private static double round(double value) {
         return Math.round(value * 100.0) / 100.0;
     }
@@ -110,6 +115,7 @@ public class TripRecord {
         return stopCount;
     }
 
+    // Listesi olmayan eski kayıtlarda null yerine boş liste döner
     public List<String> getStops() {
         return stops == null ? List.of() : List.copyOf(stops);
     }

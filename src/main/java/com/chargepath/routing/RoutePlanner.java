@@ -17,45 +17,45 @@ import java.util.Optional;
 import java.util.PriorityQueue;
 
 /**
- * Batarya kısıtlı Dijkstra ile rota planlayıcı.
+ * Batarya kısıtlı Dijkstra algoritmasıyla rota planlar.
  *
- * DÜĞÜMLER (yerler): başlangıç (0), varış (1), her şarj istasyonu (2, 3, ...)
+ * Yerler: başlangıç (0), varış (1) ve şarj istasyonları (2, 3, ...)
  *
- * DURUM = YER + BATARYA SEVİYESİ
- *   Sadece "neredeyim?" yetmez, "ne kadar bataryam var?" da önemli. Bu yüzden
- *   haritayı kat kat düşünürüz: her kat bir batarya yüzdesi (%0, %1, ... %100).
- *   Dijkstra bu katlı haritada en düşük ağırlıklı yolu arar.
+ * Klasik Dijkstra yalnızca konumu dikkate alır. Elektrikli araçta batarya
+ * seviyesi de belirleyicidir; bu nedenle durum YER + BATARYA YÜZDESİ olarak
+ * tanımlanır. Harita, her biri bir batarya yüzdesine karşılık gelen katlar
+ * şeklinde düşünülebilir (%0, %1, ... %100).
  *
  *     %80 kat:  ...  [Lüleburgaz DC] ...
- *        ^ şarj (yukarı çık)
+ *        ^ şarj (üst kata çıkış)
  *     %22 kat:  ...  [Lüleburgaz DC] ...
- *        ^ sür (aşağı in, yol enerji yer)
+ *        ^ sürüş (enerji harcanır, alt kata iniş)
  *     %50 kat:  [Kırklareli] ...
  *
- * İKİ ÇEŞİT ADIM (kenar)
- *   Sür   : bir yerden diğerine. Batarya azalır. Varışta yedek pay (%10) kalmıyorsa
- *           bu kenar yok sayılır (kısıt budur).
- *   Şarj  : bir istasyonda daha yüksek bir yüzdeye çık (en fazla %80, çünkü DC şarj
- *           %80'den sonra belirgin yavaşlar). Bir istasyona gelince en az bir kez
- *           şarj edilmeden oradan devam edilmez (boşuna uğramak anlamsız).
+ * İki tür adım vardır:
+ *   Sürüş : bir yerden diğerine geçiş. Varışta bataryada en az %10 kalmıyorsa adım geçersizdir.
+ *   Şarj  : istasyonda bataryanın en fazla %80'e yükseltilmesi. Lityum iyon batarya
+ *           %80'den sonra belirgin şekilde yavaş dolar.
  *
- * Batarya %1'lik basamaklara AŞAĞI yuvarlanır (güvenli taraf): %37.6 ile
- * varılırsa planlayıcı %37 varmış gibi davranır.
+ * Batarya seviyesi %1'lik basamaklara aşağı yuvarlanır (güvenli taraf):
+ * %37,6 ile varılan nokta %37 olarak değerlendirilir.
  *
- * Tek sorumluluk (SRP): bu sınıf sadece rota planlar. Veri okumaz, ekrana yazmaz.
- * Bağımlılıklar kurucudan arayüz olarak gelir (DIP).
+ * Sınıf yalnızca rota planlar; dosya okuma ve ekrana yazma yapmaz (SRP).
+ * İstasyon deposu ve enerji modeli kurucu üzerinden arayüz olarak alınır (DIP).
  */
 public class RoutePlanner {
 
-    /** Kuş uçuşu mesafeyi karayolu mesafesine çeviren katsayı (Trakya için varsayım). */
+    // Kuş uçuşu mesafeyi karayolu mesafesine çeviren katsayı (Trakya için varsayım)
     public static final double DEFAULT_ROAD_FACTOR = 1.3;
+    // Varışta bataryada kalması gereken en düşük yüzde (yedek pay)
     public static final double DEFAULT_RESERVE_PERCENT = 10;
+    // Şarjda ulaşılabilecek en yüksek yüzde (şarj üst sınırı)
     public static final double DEFAULT_CHARGE_LIMIT_PERCENT = 80;
 
-    private static final int LEVELS = 101;   // %0 .. %100
+    private static final int LEVELS = 101;   // batarya seviyeleri: %0 .. %100
     private static final int START = 0;
     private static final int DESTINATION = 1;
-    private static final int ARRIVED = 0;    // yere yeni varıldı (istasyonda henüz şarj edilmedi)
+    private static final int ARRIVED = 0;    // yere varıldı, henüz şarj yapılmadı
     private static final int READY = 1;      // yola çıkmaya hazır
 
     private final StationRepository stationRepository;
@@ -64,6 +64,7 @@ public class RoutePlanner {
     private final double reservePercent;
     private final double chargeLimitPercent;
 
+    // Varsayılan değerlerle oluşturur; asıl kurucu this(...) ile çağrılır
     public RoutePlanner(StationRepository stationRepository, EnergyModel energyModel) {
         this(stationRepository, energyModel, DEFAULT_ROAD_FACTOR, DEFAULT_RESERVE_PERCENT, DEFAULT_CHARGE_LIMIT_PERCENT);
     }
@@ -84,7 +85,7 @@ public class RoutePlanner {
         this.chargeLimitPercent = chargeLimitPercent;
     }
 
-    /** Kuş uçuşu mesafeyi karayolu tahminine çevirir. */
+    // Kuş uçuşu mesafeyi tahmini karayolu mesafesine çevirir
     public double roadKm(Location from, Location to) {
         return from.distanceKmTo(to) * roadFactor;
     }
@@ -98,21 +99,23 @@ public class RoutePlanner {
     }
 
     /**
-     * En iyi rotayı bulur. Hiç rota yoksa boş Optional döner; null dönmeyiz,
-     * böylece çağıran taraf NullPointerException yaşamaz.
+     * En iyi rotayı bulur. Rota yoksa null yerine boş Optional döner;
+     * böylece çağıran tarafta NullPointerException oluşmaz.
      */
     public Optional<Route> plan(TripRequest request, RouteStrategy strategy) {
         ElectricVehicle vehicle = request.getVehicle();
         TripConditions conditions = request.getConditions();
         List<ChargingStation> stations = stationRepository.findAll();
-        int n = stations.size() + 2;
+        int n = stations.size() + 2; // istasyonlar + başlangıç + varış
 
-        // 1) Her yer çifti için yol ve enerji bir kez hesaplanır (sonra tekrar tekrar kullanılır).
+        // 1. ADIM: Tüm yerler tek bir dizide toplanır
         Location[] places = new Location[n];
         places[START] = request.getFrom();
         places[DESTINATION] = request.getTo();
         for (int i = 0; i < stations.size(); i++) places[i + 2] = stations.get(i).getLocation();
 
+        // Her yer çifti için mesafe ve enerji bir kez hesaplanıp tabloda tutulur.
+        // Dijkstra aynı değerlere tekrar tekrar eriştiği için gereksiz hesap önlenir.
         double[][] km = new double[n][n];
         double[][] energy = new double[n][n];
         for (int u = 0; u < n; u++) {
@@ -128,44 +131,45 @@ public class RoutePlanner {
         double reserveKwh = capacity * reservePercent / 100.0;
         int limitLevel = (int) Math.floor(chargeLimitPercent);
 
-        // 2) Dijkstra tabloları. Her durum tek bir sayıyla adreslenir.
+        // 2. ADIM: Dijkstra tabloları. Her durum (yer, seviye, aşama) tek bir sayıyla gösterilir.
         int stateCount = n * LEVELS * 2;
-        double[] best = new double[stateCount];
-        int[] previous = new int[stateCount];
-        double[] arrivalKwh = new double[stateCount];   // sürüşle gelinen durumlarda gerçek (yuvarlanmamış) varış enerjisi
-        boolean[] done = new boolean[stateCount];
-        Arrays.fill(best, Double.POSITIVE_INFINITY);
+        double[] best = new double[stateCount];          // duruma ulaşmanın en düşük ağırlığı
+        int[] previous = new int[stateCount];            // duruma hangi durumdan gelindiği
+        double[] arrivalKwh = new double[stateCount];    // varışta kalan gerçek enerji (yuvarlanmamış)
+        boolean[] done = new boolean[stateCount];        // durum kesinleşti mi
+        Arrays.fill(best, Double.POSITIVE_INFINITY);     // başlangıçta tüm durumlar sonsuz uzaklıkta
         Arrays.fill(previous, -1);
 
         int startLevel = (int) Math.floor(request.getStartSocPercent());
         int startState = state(START, startLevel, READY);
         best[startState] = 0;
-        PriorityQueue<QueueEntry> queue = new PriorityQueue<>();
+        PriorityQueue<QueueEntry> queue = new PriorityQueue<>(); // en düşük ağırlıklı durum önce çıkar
         queue.add(new QueueEntry(startState, 0));
         int goal = -1;
 
+        // 3. ADIM: Ana döngü
         while (!queue.isEmpty()) {
             QueueEntry current = queue.poll();
             int s = current.state;
-            if (done[s]) continue;            // aynı durumun eski (daha kötü) kaydı
+            if (done[s]) continue;            // daha iyi bir kaydı işlenmiş durum atlanır
             done[s] = true;
 
             int place = placeOf(s);
             int level = levelOf(s);
             int phase = phaseOf(s);
 
-            if (place == DESTINATION) {       // varış kesinleşti, daha iyisi bulunamaz
+            if (place == DESTINATION) {       // varış kuyruktan ilk çıktığında en iyi rota bulunmuştur
                 goal = s;
                 break;
             }
 
             if (phase == READY) {
-                // SÜR: buradan başka her yere (başlangıca geri dönmek anlamsız)
+                // SÜRÜŞ: diğer tüm yerler denenir (başlangıca dönüş anlamsız olduğu için v = 1'den başlar)
                 double departKwh = (place == START) ? request.getStartSocKwh() : level * stepKwh;
                 for (int v = 1; v < n; v++) {
                     if (v == place) continue;
                     double arrival = departKwh - energy[place][v];
-                    if (arrival < reserveKwh) continue;          // batarya yetmiyor: kenar yok
+                    if (arrival < reserveKwh) continue;          // batarya yetersiz, adım geçersiz
                     int arrivalLevel = Math.min(LEVELS - 1, (int) Math.floor(arrival / stepKwh + 1e-9));
                     int next = state(v, arrivalLevel, ARRIVED);
                     double hours = km[place][v] / conditions.getSpeedKmh();
@@ -175,7 +179,7 @@ public class RoutePlanner {
                     }
                 }
             } else {
-                // ŞARJ: istasyonda bulunduğun seviyeden daha yükseğe çık
+                // ŞARJ: mevcut seviyeden üst sınıra kadar her seviye denenir
                 ChargingStation station = stations.get(place - 2);
                 for (int target = level + 1; target <= limitLevel; target++) {
                     double charged = (target - level) * stepKwh;
@@ -186,13 +190,14 @@ public class RoutePlanner {
             }
         }
 
+        // Varışa ulaşılamadıysa rota yoktur
         if (goal < 0) {
             return Optional.empty();
         }
         return Optional.of(buildRoute(request, strategy, stations, places, km, energy, stepKwh, previous, arrivalKwh, goal));
     }
 
-    /** Daha iyi bir yol bulunduysa tabloyu günceller (relaxation). */
+    // Yeni yol mevcut kayıttan iyiyse tablo güncellenir ve durum kuyruğa eklenir (relaxation)
     private boolean relax(double[] best, int[] previous, PriorityQueue<QueueEntry> queue,
                           int from, int to, double weight) {
         double candidate = best[from] + weight;
@@ -205,10 +210,11 @@ public class RoutePlanner {
         return false;
     }
 
-    /** Varış durumundan geriye yürüyüp durumları sıralar, sonra bacaklara (RouteLeg) çevirir. */
+    // previous dizisi varıştan geriye izlenerek rota oluşturulur
     private Route buildRoute(TripRequest request, RouteStrategy strategy, List<ChargingStation> stations,
                              Location[] places, double[][] km, double[][] energy, double stepKwh,
                              int[] previous, double[] arrivalKwh, int goal) {
+        // Durumlar geriye doğru toplandığı için liste ters çevrilir
         List<Integer> path = new ArrayList<>();
         for (int s = goal; s != -1; s = previous[s]) path.add(s);
         Collections.reverse(path);
@@ -217,7 +223,7 @@ public class RoutePlanner {
         double speed = request.getConditions().getSpeedKmh();
         List<RouteLeg> legs = new ArrayList<>();
 
-        // path: READY(başlangıç) -> ARRIVED(istasyon) -> READY(istasyon) -> ARRIVED ... -> ARRIVED(varış)
+        // path sırası: READY(başlangıç) -> ARRIVED(istasyon) -> READY(istasyon) -> ... -> ARRIVED(varış)
         int i = 0;
         while (i < path.size() - 1) {
             int departState = path.get(i);
@@ -232,6 +238,7 @@ public class RoutePlanner {
             double cost = 0;
             double chargeHours = 0;
             int nextIndex = i + 1;
+            // Varılan yer istasyonsa sonraki adım şarjdır ve aynı bacağa eklenir
             if (v != DESTINATION && i + 2 < path.size()) {
                 station = stations.get(v - 2);
                 int chargedState = path.get(i + 2);
@@ -247,7 +254,8 @@ public class RoutePlanner {
         return new Route(vehicle, request.getConditions(), strategy.getName(), legs);
     }
 
-    // --- Durum numarası <-> (yer, seviye, aşama) dönüşümleri ---
+    // Durum numarası ile (yer, seviye, aşama) arasında dönüşüm yapan yardımcı metotlar.
+    // Üç bilginin tek sayıda tutulması dizi kullanımını kolaylaştırır.
 
     private static int state(int place, int level, int phase) {
         return (place * LEVELS + level) * 2 + phase;
@@ -265,7 +273,8 @@ public class RoutePlanner {
         return state % 2;
     }
 
-    /** Öncelik kuyruğundaki bir kayıt: durum ve o ana kadarki ağırlık. Küçük ağırlık önce çıkar. */
+    // Öncelik kuyruğu kaydı: durum ve o ana kadarki toplam ağırlık.
+    // Comparable sayesinde kuyruk en düşük ağırlığı önce verir.
     private static final class QueueEntry implements Comparable<QueueEntry> {
         private final int state;
         private final double weight;

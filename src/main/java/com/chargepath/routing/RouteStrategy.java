@@ -1,25 +1,25 @@
 package com.chargepath.routing;
 
 /**
- * Strateji (Strategy) tasarım kalıbı: "Bir adımın bedeli nedir?" sorusunun cevabı.
+ * Strategy tasarım kalıbı: rota adımlarının maliyetini (ağırlığını) belirler.
  *
- * Dijkstra algoritması hep aynı kalır, sadece kenar ağırlığını bu arayüz verir.
- * Algoritmada iki çeşit adım var: sürmek ve şarj etmek.
+ * Dijkstra algoritması değişmez; yalnızca adım ağırlıkları bu arayüzden gelir.
+ * Algoritmada iki tür adım vardır: sürüş ve şarj.
  *
- *   CheapestStrategy -> sürmek neredeyse bedava, şarj = ödenen TL
- *   FastestStrategy  -> sürmek = sürüş saati, şarj = şarj saati + durak kaybı
+ *   CheapestStrategy : sürüş neredeyse ücretsiz, şarj = ödenen TL
+ *   FastestStrategy  : sürüş = sürüş süresi, şarj = şarj süresi + durak kaybı
  *
- * Yeni bir strateji (örn. "en az durak") eklemek için RoutePlanner'a dokunmadan
- * yeni bir sınıf yazmak yeterlidir (Açık/Kapalı İlkesi, OCP).
- * Ağırlıklar negatif olmamalı, Dijkstra buna dayanır.
+ * Yeni bir strateji, RoutePlanner değiştirilmeden yeni bir sınıfla eklenebilir
+ * (Açık/Kapalı ilkesi, OCP). Dijkstra gereği ağırlıklar negatif olmamalıdır.
  */
 public interface RouteStrategy {
 
+    // Ekranda gösterilecek ad ("En ucuz", "En hızlı")
     String getName();
 
-    /** Bir noktadan diğerine sürmenin ağırlığı. */
+    // İki nokta arasındaki sürüşün ağırlığı
     double driveWeight(double roadKm, double driveHours);
 
-    /** Bir istasyonda şarj etmenin ağırlığı. */
+    // İstasyonda yapılan şarjın ağırlığı
     double chargeWeight(double chargedKwh, double cost, double chargeHours);
 }

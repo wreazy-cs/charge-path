@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Yolculuk geçmişini JSON dosyasında tutan depo.
- * Her kayıtta dosyanın tamamı okunur, yeni kayıt eklenir ve dosya yeniden yazılır.
- * Küçük veri için en basit ve güvenilir yöntem.
+ * Yolculuk geçmişini trip_history.json dosyasında tutan depo.
+ * Her kayıtta dosya okunur, yeni kayıt eklenir ve dosya yeniden yazılır.
+ * Veri miktarı küçük olduğu için bu yöntem yeterlidir.
  */
 public class JsonTripHistoryRepository implements TripHistoryRepository {
 
@@ -27,8 +27,9 @@ public class JsonTripHistoryRepository implements TripHistoryRepository {
 
     @Override
     public List<TripRecord> findAll() {
+        // İlk çalıştırmada dosya bulunmaz; bu durumda boş liste döner
         if (!Files.exists(file)) {
-            return new ArrayList<>(); // henüz hiç yolculuk kaydedilmemiş
+            return new ArrayList<>();
         }
         return JsonFiles.readList(file, TripRecord[].class);
     }

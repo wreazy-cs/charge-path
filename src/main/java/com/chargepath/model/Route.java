@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Planlanmış rotanın tamamı: bacakların sıralı listesi ve toplamlar.
- * Toplamlar saklanmaz, her seferinde bacaklardan hesaplanır
- * (tek doğruluk kaynağı: bacak listesi).
+ * Planlanan rotanın tamamını, sıralı bacak listesi olarak tutar.
+ * Toplam değerler ayrıca saklanmaz, her çağrıda bacaklardan hesaplanır;
+ * böylece veriler her zaman tutarlı kalır.
  */
 public final class Route {
 
@@ -21,10 +21,11 @@ public final class Route {
         this.vehicle = vehicle;
         this.conditions = conditions;
         this.strategyName = strategyName;
-        this.legs = new ArrayList<>(legs); // savunmacı kopya: dışarıdaki liste değişse de rota değişmez
+        // Savunmacı kopya: dışarıdaki liste değişse de rota etkilenmez
+        this.legs = new ArrayList<>(legs);
     }
 
-    /** Dışarıya salt okunur liste verilir, rota dışarıdan bozulamaz (kapsülleme). */
+    // Salt okunur liste döner; rota dışarıdan değiştirilemez (kapsülleme)
     public List<RouteLeg> getLegs() {
         return Collections.unmodifiableList(legs);
     }
@@ -36,6 +37,8 @@ public final class Route {
     public Location getDestination() {
         return legs.get(legs.size() - 1).getTo();
     }
+
+    // Aşağıdaki toplam metotları tüm bacakları dolaşarak ilgili değeri toplar
 
     public double getTotalDistanceKm() {
         double sum = 0;
@@ -73,11 +76,12 @@ public final class Route {
         return sum;
     }
 
+    // Toplam süre = sürüş süresi + şarj süresi
     public double getTotalHours() {
         return getTotalDriveHours() + getTotalChargeHours();
     }
 
-    /** Yolda kaç kez şarj için durulduğu. */
+    // Yol boyunca yapılan şarj duraklarının sayısı
     public int getStopCount() {
         int count = 0;
         for (RouteLeg leg : legs) {
@@ -86,6 +90,7 @@ public final class Route {
         return count;
     }
 
+    // Varıştaki batarya seviyesi, son bacağın varış değeridir
     public double getFinalSocKwh() {
         return legs.get(legs.size() - 1).getArrivalSocKwh();
     }
