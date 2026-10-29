@@ -10,7 +10,7 @@
     "type": "DC",
     "powerKw": 60,
     "pricePerKwh": 13.5,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-02",
@@ -23,7 +23,7 @@
     "type": "DC",
     "powerKw": 60,
     "pricePerKwh": 12.99,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-03",
@@ -36,7 +36,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-04",
@@ -49,7 +49,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-05",
@@ -62,7 +62,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-06",
@@ -75,7 +75,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.95,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-07",
@@ -88,7 +88,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.95,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "KRK-08",
@@ -101,7 +101,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.95,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "BBS-01",
@@ -114,7 +114,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "LBG-01",
@@ -127,7 +127,7 @@
     "type": "DC",
     "powerKw": 60,
     "pricePerKwh": 12.99,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "LBG-02",
@@ -140,7 +140,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 10.99,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "LBG-03",
@@ -153,7 +153,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "LBG-04",
@@ -166,7 +166,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.9,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "EDR-01",
@@ -179,7 +179,7 @@
     "type": "DC",
     "powerKw": 250,
     "pricePerKwh": 13.0,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: 6 adet, 250 kW. Fiyat: gzt.com 07.07.2026, Tesla dışı araç fiyatı. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: 6 adet, 250 kW. Fiyat: gzt.com 07.07.2026, Tesla dışı araç fiyatı. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "EDR-02",
@@ -192,7 +192,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.99,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: 2 adet Type 2 soket, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: 2 adet Type 2 soket, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "EDR-03",
@@ -205,7 +205,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "HVS-01",
@@ -218,7 +218,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.95,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: Type 2 soket, güç varsayım. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: Type 2 soket, güç varsayım. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "MRT-01",
@@ -231,7 +231,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.99,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: 2 adet Type 2 soket, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: 2 adet Type 2 soket, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "CRL-01",
@@ -244,7 +244,7 @@
     "type": "DC",
     "powerKw": 120,
     "pricePerKwh": 13.5,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: 2 adet, 120 kW. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: 2 adet, 120 kW. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "CRL-02",
@@ -257,7 +257,7 @@
     "type": "DC",
     "powerKw": 50,
     "pricePerKwh": 13.5,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: CHAdeMO soket var, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: CHAdeMO soket var, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "CRL-03",
@@ -270,7 +270,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "CRK-01",
@@ -283,7 +283,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 13.5,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM adı: 180 kW. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM adı: 180 kW. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "CRK-02",
@@ -296,7 +296,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.99,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: 2 adet Type 2 soket, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: 2 adet Type 2 soket, güç varsayım. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "TKD-01",
@@ -309,7 +309,7 @@
     "type": "DC",
     "powerKw": 250,
     "pricePerKwh": 13.0,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: 8 adet, 250 kW. Fiyat: gzt.com 07.07.2026, Tesla dışı araç fiyatı. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: 8 adet, 250 kW. Fiyat: gzt.com 07.07.2026, Tesla dışı araç fiyatı. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "TKD-02",
@@ -322,7 +322,7 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.95,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: Type 2 soket, güç varsayım. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: Type 2 soket, güç varsayım. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "SLV-01",
@@ -335,7 +335,7 @@
     "type": "DC",
     "powerKw": 180,
     "pricePerKwh": 14.98,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "SLV-02",
@@ -348,7 +348,7 @@
     "type": "DC",
     "powerKw": 60,
     "pricePerKwh": 12.99,
-    "notes": "Konum: Google Haritalar (28.10.2026). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m."
+    "notes": "Konum: simülasyon için harita üzerinde elle işaretlendi (yaklaşık). Güç: VARSAYIM. Fiyat: chargemate.io 26.08.2026. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   },
   {
     "id": "IST-01",
@@ -361,6 +361,6 @@
     "type": "AC",
     "powerKw": 22,
     "pricePerKwh": 9.95,
-    "notes": "Konum: Google Haritalar + OpenStreetMap (28.10.2026). Güç: OSM: Type 2 soket, güç varsayım. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m."
+    "notes": "Konum: OpenStreetMap kaydından alındı, simülasyon için işaretlendi. Güç: OSM: Type 2 soket, güç varsayım. Fiyat: VARSAYIM: piyasa ortalaması. Rakım: SRTM 90m. Gerçek istasyonun varlığı ve güncelliği garanti edilmez."
   }
 ]

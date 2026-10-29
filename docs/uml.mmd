@@ -1,0 +1,156 @@
+classDiagram
+direction LR
+
+namespace model {
+    class Location {
+        -String name
+        -double latitude
+        -double longitude
+        -double elevationM
+        +distanceKmTo(Location) double
+    }
+    class TripConditions {
+        -double speedKmh
+        -double temperatureC
+        -boolean climateOn
+    }
+    class ElectricVehicle {
+        <<abstract>>
+        -String id
+        -double batteryKwh
+        -double consumptionWhPerKm
+        -double massKg
+        -double socKwh
+        +consume(double kwh)
+        +charge(double kwh)
+        +getDragFactor()* double
+        +getTypeName()* String
+    }
+    class Sedan
+    class Suv
+    class ChargingStation {
+        <<abstract>>
+        -String id
+        -Location location
+        -double powerKw
+        -double pricePerKwh
+        +effectivePowerKw(ElectricVehicle)* double
+        +chargingTimeHours(double, ElectricVehicle) double
+        +chargingCost(double) double
+    }
+    class AcStation
+    class DcFastStation
+    class RouteLeg {
+        -double roadKm
+        -double energyKwh
+        -double chargedKwh
+        -double chargeCost
+        +endsAtStation() boolean
+    }
+    class Route {
+        -List~RouteLeg~ legs
+        +getTotalCost() double
+        +getTotalHours() double
+        +getStopCount() int
+    }
+}
+
+namespace energy {
+    class EnergyModel {
+        <<interface>>
+        +legEnergyKwh(...) double
+        +rangeKm(...) double
+    }
+    class PhysicsEnergyModel
+}
+
+namespace routing {
+    class RouteStrategy {
+        <<interface>>
+        +getName() String
+        +driveWeight(double, double) double
+        +chargeWeight(double, double, double) double
+    }
+    class CheapestStrategy
+    class FastestStrategy
+    class TripRequest
+    class RoutePlanner {
+        -StationRepository stationRepository
+        -EnergyModel energyModel
+        +plan(TripRequest, RouteStrategy) Optional~Route~
+    }
+}
+
+namespace data {
+    class StationRepository {
+        <<interface>>
+        +findAll() List
+        +findById(String) Optional
+    }
+    class VehicleRepository {
+        <<interface>>
+    }
+    class CityRepository {
+        <<interface>>
+    }
+    class TripHistoryRepository {
+        <<interface>>
+        +save(TripRecord)
+        +findAll() List
+    }
+    class JsonStationRepository
+    class JsonVehicleRepository
+    class JsonCityRepository
+    class JsonTripHistoryRepository
+    class VehicleFactory {
+        +create(VehicleRecord)$ ElectricVehicle
+    }
+    class StationFactory {
+        +create(StationRecord)$ ChargingStation
+    }
+    class TripRecord {
+        +from(Route)$ TripRecord
+    }
+}
+
+namespace app {
+    class ChargePathApp {
+        +main(String[])$
+    }
+    class ConsoleMenu
+    class InputReader
+    class RoutePrinter
+}
+
+ElectricVehicle <|-- Sedan
+ElectricVehicle <|-- Suv
+ChargingStation <|-- AcStation
+ChargingStation <|-- DcFastStation
+ChargingStation --> Location
+Route *-- RouteLeg
+RouteLeg --> ChargingStation
+
+EnergyModel <|.. PhysicsEnergyModel
+RouteStrategy <|.. CheapestStrategy
+RouteStrategy <|.. FastestStrategy
+RoutePlanner --> StationRepository
+RoutePlanner --> EnergyModel
+RoutePlanner ..> RouteStrategy
+RoutePlanner ..> TripRequest
+RoutePlanner ..> Route
+
+StationRepository <|.. JsonStationRepository
+VehicleRepository <|.. JsonVehicleRepository
+CityRepository <|.. JsonCityRepository
+TripHistoryRepository <|.. JsonTripHistoryRepository
+JsonStationRepository ..> StationFactory
+JsonVehicleRepository ..> VehicleFactory
+VehicleFactory ..> ElectricVehicle
+StationFactory ..> ChargingStation
+JsonTripHistoryRepository ..> TripRecord
+
+ChargePathApp ..> ConsoleMenu
+ConsoleMenu --> RoutePlanner
+ConsoleMenu --> InputReader
+ConsoleMenu --> RoutePrinter
+ConsoleMenu --> TripHistoryRepository

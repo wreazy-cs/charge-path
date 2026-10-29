@@ -39,6 +39,15 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
             </plugin>
+            <!-- "mvn exec:java" ile konsol uygulamasını çalıştırmak için. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>com.chargepath.app.ChargePathApp</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

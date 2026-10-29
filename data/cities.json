@@ -1,0 +1,98 @@
+[
+  {
+    "id": "KRK",
+    "name": "Kırklareli",
+    "lat": 41.7351,
+    "lon": 27.2252,
+    "elevationM": 216,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "EDR",
+    "name": "Edirne",
+    "lat": 41.6771,
+    "lon": 26.5557,
+    "elevationM": 63,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "LBG",
+    "name": "Lüleburgaz",
+    "lat": 41.4039,
+    "lon": 27.3569,
+    "elevationM": 65,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "BBS",
+    "name": "Babaeski",
+    "lat": 41.4325,
+    "lon": 27.0931,
+    "elevationM": 58,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "TKD",
+    "name": "Tekirdağ",
+    "lat": 40.9781,
+    "lon": 27.5115,
+    "elevationM": 40,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "CRL",
+    "name": "Çorlu",
+    "lat": 41.1592,
+    "lon": 27.8,
+    "elevationM": 172,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "CRK",
+    "name": "Çerkezköy",
+    "lat": 41.285,
+    "lon": 28.0,
+    "elevationM": 161,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "SLV",
+    "name": "Silivri",
+    "lat": 41.0739,
+    "lon": 28.2464,
+    "elevationM": 10,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "HVS",
+    "name": "Havsa",
+    "lat": 41.5486,
+    "lon": 26.8211,
+    "elevationM": 81,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "MRT",
+    "name": "Muratlı",
+    "lat": 41.1722,
+    "lon": 27.5011,
+    "elevationM": 86,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "AVC",
+    "name": "İstanbul (Avcılar)",
+    "lat": 40.9799,
+    "lon": 28.7217,
+    "elevationM": 69,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  },
+  {
+    "id": "IST",
+    "name": "İstanbul (Fatih)",
+    "lat": 41.0082,
+    "lon": 28.9784,
+    "elevationM": 39,
+    "notes": "Konum: şehir merkezinin yaklaşık koordinatı. Rakım: SRTM 90m (OpenTopoData, 29.10.2026)."
+  }
+]

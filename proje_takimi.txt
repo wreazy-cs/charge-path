@@ -1,0 +1,6 @@
+Proje: ChargePath - Elektrikli Araç Şarj ve Rota Planlama
+GitHub: https://github.com/wreazy-cs/charge-path
+
+Öğrenci No   : 1250505013
+Ad Soyad     : Samet Muhammed Ali Şafak
+Görev        : Tek kişilik proje. Analiz, tasarım (UML), veri toplama, kodlama, birim testleri, dokümantasyon ve video sunumu.
