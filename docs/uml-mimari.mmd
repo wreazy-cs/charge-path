@@ -1,0 +1,132 @@
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "16px"}}}%%
+classDiagram
+direction TB
+
+class ChargePathApp:::app {
+    +main(String[])$
+}
+class ConsoleMenu:::app {
+    +run()
+    +runDemo()
+}
+class InputReader:::app
+class RoutePrinter:::app
+
+class RoutePlanner:::routing {
+    -StationRepository stationRepository
+    -EnergyModel energyModel
+    +plan(TripRequest, RouteStrategy) Optional~Route~
+    +roadKm(Location, Location) double
+}
+class TripRequest:::routing
+class RouteStrategy:::routing {
+    <<interface>>
+    +getName() String
+    +driveWeight(double, double) double
+    +chargeWeight(double, double, double) double
+}
+class CheapestStrategy:::routing
+class FastestStrategy:::routing
+
+class EnergyModel:::energy {
+    <<interface>>
+    +legEnergyKwh(...) double
+    +rangeKm(...) double
+}
+class PhysicsEnergyModel:::energy
+
+class StationRepository:::data {
+    <<interface>>
+    +findAll() List
+    +findById(String) Optional
+}
+class VehicleRepository:::data {
+    <<interface>>
+}
+class CityRepository:::data {
+    <<interface>>
+}
+class TripHistoryRepository:::data {
+    <<interface>>
+    +save(TripRecord)
+    +findAll() List
+}
+class JsonStationRepository:::data
+class JsonVehicleRepository:::data
+class JsonCityRepository:::data
+class JsonTripHistoryRepository:::data
+class StationFactory:::data {
+    +create(StationRecord)$ ChargingStation
+}
+class VehicleFactory:::data {
+    +create(VehicleRecord)$ ElectricVehicle
+}
+class StationRecord:::data
+class VehicleRecord:::data
+class CityRecord:::data
+class TripRecord:::data {
+    +from(Route)$ TripRecord
+}
+class JsonFiles:::data {
+    +readList(Path, Class)$ List
+    +writeList(Path, List)$
+}
+class DataAccessException:::data
+
+class ElectricVehicle:::model
+class ChargingStation:::model
+class Location:::model
+class TripConditions:::model
+class Route:::model
+
+note for ChargePathApp "Tüm nesneleri burada new ile üretir ve kurucular üzerinden birbirine bağlar"
+
+ChargePathApp ..> ConsoleMenu : üretir
+ConsoleMenu --> RoutePlanner
+ConsoleMenu --> InputReader
+ConsoleMenu --> RoutePrinter
+ConsoleMenu --> StationRepository
+ConsoleMenu --> VehicleRepository
+ConsoleMenu --> CityRepository
+ConsoleMenu --> TripHistoryRepository
+ConsoleMenu --> EnergyModel
+RoutePrinter ..> Route
+
+RoutePlanner --> StationRepository
+RoutePlanner --> EnergyModel
+RoutePlanner ..> RouteStrategy
+RoutePlanner ..> TripRequest
+RoutePlanner ..> Route : üretir
+TripRequest --> ElectricVehicle
+TripRequest --> Location
+TripRequest --> TripConditions
+
+RouteStrategy <|.. CheapestStrategy : implements
+RouteStrategy <|.. FastestStrategy : implements
+EnergyModel <|.. PhysicsEnergyModel : implements
+
+StationRepository <|.. JsonStationRepository : implements
+VehicleRepository <|.. JsonVehicleRepository : implements
+CityRepository <|.. JsonCityRepository : implements
+TripHistoryRepository <|.. JsonTripHistoryRepository : implements
+
+JsonStationRepository ..> StationFactory
+JsonStationRepository ..> StationRecord
+JsonVehicleRepository ..> VehicleFactory
+JsonVehicleRepository ..> VehicleRecord
+JsonCityRepository ..> CityRecord
+JsonTripHistoryRepository ..> TripRecord
+StationFactory ..> ChargingStation : üretir
+VehicleFactory ..> ElectricVehicle : üretir
+TripRecord ..> Route
+JsonStationRepository ..> JsonFiles
+JsonVehicleRepository ..> JsonFiles
+JsonCityRepository ..> JsonFiles
+JsonTripHistoryRepository ..> JsonFiles
+JsonFiles ..> DataAccessException
+
+classDef app fill:#dbeafe,stroke:#2563eb,color:#111
+classDef routing fill:#fef3c7,stroke:#d97706,color:#111
+classDef energy fill:#dcfce7,stroke:#16a34a,color:#111
+classDef data fill:#f3e8ff,stroke:#9333ea,color:#111
+classDef model fill:#f1f5f9,stroke:#64748b,color:#111

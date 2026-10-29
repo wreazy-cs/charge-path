@@ -70,8 +70,8 @@ charge-path/
 │   ├── cities.json              başlangıç/varış şehirleri
 │   └── trip_history.json        program çalışınca oluşur (yolculuk geçmişi)
 ├── docs/
-│   ├── uml.mmd                  UML kaynağı (Mermaid)
-│   └── uml.png                  UML sınıf diyagramı
+│   ├── uml-model.(mmd|png|pdf|svg)    alan modeli UML diyagramı
+│   └── uml-mimari.(mmd|png|pdf|svg)   mimari UML diyagramı
 ├── src/main/java/com/chargepath/
 │   ├── model/     Location, TripConditions, ElectricVehicle, Sedan, Suv,
 │   │              ChargingStation, AcStation, DcFastStation, RouteLeg, Route
@@ -85,9 +85,25 @@ charge-path/
 
 Toplam **37 sınıf ve arayüz**. Paketler katman katman ayrılmıştır: `app` kullanıcıyla konuşur, `routing` karar verir, `energy` hesaplar, `data` okur/yazar, `model` alanı temsil eder.
 
-## UML sınıf diyagramı
+## UML sınıf diyagramları
 
-![UML sınıf diyagramı](docs/uml.png)
+Diyagram okunabilir olsun diye ikiye bölündü. Resimler GitHub'da küçük görünür; **yakınlaştırmak için PDF (vektör, kayıpsız büyür) ya da SVG sürümünü açın.**
+
+### 1. Alan modeli (`model` paketi): araç, istasyon, rota
+
+[PDF olarak aç (yakınlaştırılabilir)](docs/uml-model.pdf) · [SVG](docs/uml-model.svg)
+
+![Alan modeli UML](docs/uml-model.png)
+
+### 2. Mimari: katmanlar, arayüzler, kalıplar
+
+Renkler: mavi `app`, sarı `routing`, yeşil `energy`, mor `data`, gri `model`. Kesik çizgi bağımlılık, içi boş üçgen kalıtım ya da arayüz uygulama, düz ok ilişkidir.
+
+[PDF olarak aç (yakınlaştırılabilir)](docs/uml-mimari.pdf) · [SVG](docs/uml-mimari.svg)
+
+![Mimari UML](docs/uml-mimari.png)
+
+Kaynak dosyalar: `docs/uml-model.mmd` ve `docs/uml-mimari.mmd` (Mermaid).
 
 ## Nesneye yönelik programlama ilkeleri
 

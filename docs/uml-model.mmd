@@ -1,0 +1,99 @@
+%%{init: {"theme": "base", "themeVariables": {"fontSize": "16px"}}}%%
+classDiagram
+direction TB
+
+class ElectricVehicle {
+    <<abstract>>
+    -String id
+    -String brand
+    -String model
+    -double batteryKwh
+    -double consumptionWhPerKm
+    -double massKg
+    -double maxDcKw
+    -double maxAcKw
+    -double socKwh
+    +consume(double kwh)
+    +charge(double kwh)
+    +setSocPercent(double percent)
+    +getSocPercent() double
+    +getDragFactor()* double
+    +getTypeName()* String
+}
+class Sedan {
+    +getDragFactor() double
+    +getTypeName() String
+}
+class Suv {
+    +getDragFactor() double
+    +getTypeName() String
+}
+
+class ChargingStation {
+    <<abstract>>
+    -String id
+    -String name
+    -String operator
+    -String city
+    -double powerKw
+    -double pricePerKwh
+    +effectivePowerKw(ElectricVehicle)* double
+    +getTypeName()* String
+    +chargingTimeHours(double, ElectricVehicle) double
+    +chargingCost(double) double
+}
+class AcStation {
+    +effectivePowerKw(ElectricVehicle) double
+    +getTypeName() String
+}
+class DcFastStation {
+    +effectivePowerKw(ElectricVehicle) double
+    +getTypeName() String
+}
+
+class Location {
+    -String name
+    -double latitude
+    -double longitude
+    -double elevationM
+    +distanceKmTo(Location) double
+}
+class TripConditions {
+    -double speedKmh
+    -double temperatureC
+    -boolean climateOn
+}
+class RouteLeg {
+    -double roadKm
+    -double energyKwh
+    -double departSocKwh
+    -double arrivalSocKwh
+    -double chargedKwh
+    -double chargeCost
+    -double driveHours
+    -double chargeHours
+    +endsAtStation() boolean
+}
+class Route {
+    -String strategyName
+    -List~RouteLeg~ legs
+    +getTotalDistanceKm() double
+    +getTotalEnergyKwh() double
+    +getTotalCost() double
+    +getTotalHours() double
+    +getStopCount() int
+}
+
+ElectricVehicle <|-- Sedan : extends
+ElectricVehicle <|-- Suv : extends
+ChargingStation <|-- AcStation : extends
+ChargingStation <|-- DcFastStation : extends
+
+ChargingStation --> "1" Location : konum
+ChargingStation ..> ElectricVehicle : güç hesabı için kullanır
+
+Route "1" *-- "1..*" RouteLeg : bacaklar
+Route --> "1" ElectricVehicle : araç
+Route --> "1" TripConditions : koşullar
+RouteLeg --> "2" Location : from, to
+RouteLeg --> "0..1" ChargingStation : şarj istasyonu
